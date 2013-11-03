@@ -15,11 +15,18 @@ int[] MAX_VALUES;
 int minValue = -40000;
 int maxValue = 40000;
 
+//Graph colors
+color[] graphColors = { #FFCC00 };
+//Default graph color
+color defaultGraphColor = #cccccc;
+
+//This array is actually used for performance reasons
+color[] initedColorsArray;
 
 boolean columnNamesInited = false;
 
 void setup() {  
-  size(600, 400);
+  size(1600, 600);
   //println(arduino.list()); // Use this to print connected serial devices
   arduino = new Serial(this, Serial.list()[1], 115200);
   arduino.clear();
@@ -44,13 +51,15 @@ void draw()
 
 
   noFill();
-  stroke(0,0,255); // blue
+  
   
   if(columnNamesInited)
   {
-    // redraw everything
+    // redraw each graph
     for(int val_num = 0; val_num < COLUMN_DATA.length; val_num++)
     {
+      stroke(initedColorsArray[val_num]);
+      
       beginShape();
       for(int i = 0; i < COLUMN_DATA[val_num].length; i++)
       {
@@ -78,8 +87,6 @@ void serialEvent (Serial arduino) {
     
     if(!columnNamesInited)
     {
-      
-      
       print("Init string from arduino: ");
       println(serialData);
       
@@ -95,6 +102,8 @@ void serialEvent (Serial arduino) {
       //Init min and max array length
       MIN_VALUES = new int[COLUMN_NAMES.length];
       MAX_VALUES = new int[COLUMN_NAMES.length];
+      
+      initedColorsArray = new color[COLUMN_NAMES.length];
       
       for(int i=0; i < COLUMN_NAMES.length; i++)
       {
@@ -117,6 +126,17 @@ void serialEvent (Serial arduino) {
           MIN_VALUES[i] = minValue;
           MAX_VALUES[i] = maxValue;
         }
+        
+        //Init colors
+        if(graphColors.length > i)
+        {
+          initedColorsArray[i] = graphColors[i];
+        }
+        else
+        {
+          initedColorsArray[i] = defaultGraphColor;
+        }
+        
       }
 
       
@@ -143,4 +163,3 @@ void serialEvent (Serial arduino) {
   arduino.clear();
   
 }
-
