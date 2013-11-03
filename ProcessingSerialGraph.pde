@@ -4,7 +4,7 @@ Serial arduino;
 
 String serialData;
 
-boolean showAllGraphsOnOneAxis = true;
+boolean showAllGraphsOnOneAxis = false;
 
 String[] COLUMN_NAMES;
 float[][] COLUMN_DATA;
@@ -18,7 +18,7 @@ int minValue = -40000;
 int maxValue = 40000;
 
 //Graph colors
-color[] graphColors = { #FF0000, #0000FF };
+color[] graphColors = { #FF0000, #00FF00, #0000FF };
 //Default graph color
 color defaultGraphColor = #cccccc;
 
@@ -33,26 +33,19 @@ void setup() {
   arduino = new Serial(this, Serial.list()[1], 115200);
   arduino.clear();
   arduino.bufferUntil('\n'); // Buffer until line feed
-  
+  textSize(20);
+  smooth();
 }
 
 void draw()
 { 
   // Draw graphPaper
-  background(255); // white
+  background(0); // white
   for (int i = 0; i<=width/10; i++) {
-    stroke(200); // gray
+    stroke(10); // gray
     line((-frameCount%10)+i*10, 0, (-frameCount%10)+i*10, height);
     line(0, i*10, width, i*10);
   }
-
-  stroke(0); // black
-  for (int i = 1; i <= 3; i++)
-    line(0, height/4*i, width, height/4*i); // Draw line, indicating 90 deg, 180 deg, and 270 deg
-
-
-
-  noFill();
   
   
   if(columnNamesInited)
@@ -60,8 +53,15 @@ void draw()
     // redraw each graph
     for(int val_num = 0; val_num < COLUMN_DATA.length; val_num++)
     {
+      float graphBottom = val_num * height/COLUMN_DATA.length;
+      drawLineSeparator(graphBottom);
       
       stroke(initedColorsArray[val_num]);
+      fill(initedColorsArray[val_num]);
+      
+      text(COLUMN_NAMES[val_num], 10, graphBottom + 20);
+      noFill();
+      
       
       beginShape();
       for(int i = 0; i < COLUMN_DATA[val_num].length; i++)
@@ -74,7 +74,7 @@ void draw()
         else
         {
           ypos = map(COLUMN_DATA[val_num][i], MIN_VALUES[val_num], MAX_VALUES[val_num], 0, height/COLUMN_DATA.length);
-          float graphBottom = val_num * height/COLUMN_DATA.length;
+          
           ypos = ypos + graphBottom;
         }
         
@@ -91,6 +91,15 @@ void draw()
   }
   
   
+}
+
+
+void drawLineSeparator(float graphBottom)
+{
+  stroke(80);
+  strokeWeight(3);
+  line(0, graphBottom, width, graphBottom);
+  strokeWeight(1);
 }
 
 void serialEvent (Serial arduino) {
@@ -112,7 +121,7 @@ void serialEvent (Serial arduino) {
         println("Error!");
       }
       
-      String[] COLUMN_NAMES = split(serialData.substring(startColumnsIndex + 1), ",");
+      COLUMN_NAMES = split(serialData.substring(startColumnsIndex + 1), ",");
       
       //Init min and max array length
       MIN_VALUES = new int[COLUMN_NAMES.length];
@@ -130,6 +139,7 @@ void serialEvent (Serial arduino) {
           String AdditionalData = COLUMN_NAMES[i].substring(additionalDataIndex + 1, COLUMN_NAMES[i].length() - 1);
           //Самой колонке оставляем только имя
           COLUMN_NAMES[i] = COLUMN_NAMES[i].substring(0, additionalDataIndex);
+         
          
          
           int[] minAndMax = int(split(AdditionalData, ";"));
