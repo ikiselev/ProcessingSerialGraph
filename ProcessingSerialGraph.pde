@@ -4,6 +4,8 @@ Serial arduino;
 
 String serialData;
 
+boolean showAllGraphsOnOneAxis = true;
+
 String[] COLUMN_NAMES;
 float[][] COLUMN_DATA;
 
@@ -16,7 +18,7 @@ int minValue = -40000;
 int maxValue = 40000;
 
 //Graph colors
-color[] graphColors = { #FFCC00 };
+color[] graphColors = { #FF0000, #0000FF };
 //Default graph color
 color defaultGraphColor = #cccccc;
 
@@ -58,12 +60,25 @@ void draw()
     // redraw each graph
     for(int val_num = 0; val_num < COLUMN_DATA.length; val_num++)
     {
+      
       stroke(initedColorsArray[val_num]);
       
       beginShape();
       for(int i = 0; i < COLUMN_DATA[val_num].length; i++)
       {
-        vertex(i,COLUMN_DATA[val_num][i]);
+        float ypos;
+        if(showAllGraphsOnOneAxis)
+        {
+          ypos = map(COLUMN_DATA[val_num][i], MIN_VALUES[val_num], MAX_VALUES[val_num], 0, height);
+        }
+        else
+        {
+          ypos = map(COLUMN_DATA[val_num][i], MIN_VALUES[val_num], MAX_VALUES[val_num], 0, height/COLUMN_DATA.length);
+          float graphBottom = val_num * height/COLUMN_DATA.length;
+          ypos = ypos + graphBottom;
+        }
+        
+        vertex(i,ypos);
       }
       endShape();
       
@@ -155,7 +170,7 @@ void serialEvent (Serial arduino) {
     
       for(int val_num = 0; val_num < incomingValues.length; val_num++)
       {
-        COLUMN_DATA[val_num][width-1] = map(incomingValues[val_num], MIN_VALUES[val_num], MAX_VALUES[val_num], 0, height);
+        COLUMN_DATA[val_num][width-1] = incomingValues[val_num];
       }
     }
   }
