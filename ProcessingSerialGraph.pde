@@ -18,7 +18,7 @@ int minValue = -40000;
 int maxValue = 40000;
 
 //Graph colors
-color[] graphColors = { #FF0000, #00FF00, #0000FF };
+color[] graphColors = { #FF0000, #00FF00, #0000FF, #FFFF00, #FF00FF, #00FFFF };
 //Default graph color
 color defaultGraphColor = #cccccc;
 
@@ -27,18 +27,23 @@ color[] initedColorsArray;
 
 boolean columnNamesInited = false;
 
-void setup() {  
-  size(1600, 600);
-  //println(arduino.list()); // Use this to print connected serial devices
-  arduino = new Serial(this, Serial.list()[1], 115200);
+void setup() {
+  frameRate(60);
+  size(1200, 700);
+  println(arduino.list()); // Use this to print connected serial devices
+  
+  arduino = new Serial(this, Serial.list()[8], 115200);
+  
+  
   arduino.clear();
   arduino.bufferUntil('\n'); // Buffer until line feed
+  delay(1000);
   textSize(20);
   smooth();
 }
 
 void draw()
-{ 
+{
   // Draw graphPaper
   background(0); // white
   for (int i = 0; i<=width/10; i++) {
@@ -82,6 +87,12 @@ void draw()
       }
       endShape();
       
+      int her = int((MIN_VALUES[val_num] + MAX_VALUES[val_num]) / 2);
+      float half = map(her, MIN_VALUES[val_num], MAX_VALUES[val_num], 0, height/COLUMN_DATA.length);
+      stroke(180);
+      line(0, half, width, half);
+      
+      
       // put all data one array back
       for(int i = 1; i < COLUMN_DATA[val_num].length; i++)
       {
@@ -111,15 +122,17 @@ void serialEvent (Serial arduino) {
     
     if(!columnNamesInited)
     {
-      print("Init string from arduino: ");
-      println(serialData);
-      
 
       int startColumnsIndex = serialData.indexOf(':');
       if(startColumnsIndex == -1)
       {
-        println("Error!");
+        //If Arduino already writes in serial port, we've got garbage in serialData.
+        //So wait untill arduino resets
+        return;
       }
+      
+      print("Init string from arduino: ");
+      println(serialData);
       
       COLUMN_NAMES = split(serialData.substring(startColumnsIndex + 1), ",");
       
