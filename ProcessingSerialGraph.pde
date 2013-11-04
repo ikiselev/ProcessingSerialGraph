@@ -28,12 +28,11 @@ color[] initedColorsArray;
 boolean columnNamesInited = false;
 
 void setup() {
-  size(1200, 1000);
+  size(1200, 700);
   println(arduino.list()); // Use this to print connected serial devices
-  arduino = new Serial(this, Serial.list()[1], 115200);
+  arduino = new Serial(this, Serial.list()[8], 115200);
   arduino.clear();
   arduino.bufferUntil('\n'); // Buffer until line feed
-  textSize(18);
   smooth();
 }
 
@@ -66,7 +65,10 @@ void draw()
       stroke(initedColorsArray[val_num]);
       fill(initedColorsArray[val_num]);
       
-      text(center_val, 10, half + graphBottom + 20);
+      textSize(12);
+      text(center_val, 10, half + graphBottom - 5);
+      
+      textSize(18);
       text(COLUMN_NAMES[val_num] + " [" + MIN_VALUES[val_num] + "; " + MAX_VALUES[val_num] + "]", 10, graphBottom + 20);
       noFill();
       
