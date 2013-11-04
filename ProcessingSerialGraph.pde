@@ -28,17 +28,12 @@ color[] initedColorsArray;
 boolean columnNamesInited = false;
 
 void setup() {
-  frameRate(60);
-  size(1200, 700);
+  size(1200, 1000);
   println(arduino.list()); // Use this to print connected serial devices
-  
-  arduino = new Serial(this, Serial.list()[8], 115200);
-  
-  
+  arduino = new Serial(this, Serial.list()[1], 115200);
   arduino.clear();
   arduino.bufferUntil('\n'); // Buffer until line feed
-  delay(1000);
-  textSize(20);
+  textSize(18);
   smooth();
 }
 
@@ -47,7 +42,7 @@ void draw()
   // Draw graphPaper
   background(0); // white
   for (int i = 0; i<=width/10; i++) {
-    stroke(10); // gray
+    stroke(20); // gray
     line((-frameCount%10)+i*10, 0, (-frameCount%10)+i*10, height);
     line(0, i*10, width, i*10);
   }
@@ -61,11 +56,21 @@ void draw()
       float graphBottom = val_num * height/COLUMN_DATA.length;
       drawLineSeparator(graphBottom);
       
+      //Draw zero axis
+      int center_val = int((MIN_VALUES[val_num] + MAX_VALUES[val_num]) / 2);
+      float half = map(center_val, MIN_VALUES[val_num], MAX_VALUES[val_num], 0, height/COLUMN_DATA.length);
+      stroke(180);
+      line(0, half + graphBottom, width, half + graphBottom);
+      
+      
       stroke(initedColorsArray[val_num]);
       fill(initedColorsArray[val_num]);
       
-      text(COLUMN_NAMES[val_num], 10, graphBottom + 20);
+      text(center_val, 10, half + graphBottom + 20);
+      text(COLUMN_NAMES[val_num] + " [" + MIN_VALUES[val_num] + "; " + MAX_VALUES[val_num] + "]", 10, graphBottom + 20);
       noFill();
+      
+      
       
       
       beginShape();
@@ -87,10 +92,8 @@ void draw()
       }
       endShape();
       
-      int her = int((MIN_VALUES[val_num] + MAX_VALUES[val_num]) / 2);
-      float half = map(her, MIN_VALUES[val_num], MAX_VALUES[val_num], 0, height/COLUMN_DATA.length);
-      stroke(180);
-      line(0, half, width, half);
+      
+      
       
       
       // put all data one array back
