@@ -13,6 +13,11 @@ public class ProcessingSerialGraph extends PApplet {
     String[] COLUMN_NAMES;
     int[][] COLUMN_DATA;
 
+    int showGraphTime = 10000; //10sec
+
+    int[] MILLIS_BETWEEN_PACK;
+    int lastMillis = 0;
+
 
     int[] MIN_VALUES;
     int[] MAX_VALUES;
@@ -33,6 +38,10 @@ public class ProcessingSerialGraph extends PApplet {
     boolean columnNamesInited = false;
 
     String useSerialPort[] = {"COM7"};
+
+
+    boolean deltaMillisCalc = false;
+
 
     protected Serial getSerial()
     {
@@ -61,6 +70,7 @@ public class ProcessingSerialGraph extends PApplet {
     public void setup() {
         size(1200, 700);
 
+        MILLIS_BETWEEN_PACK = new int[width];
 
 
         arduino = getSerial();
@@ -73,11 +83,11 @@ public class ProcessingSerialGraph extends PApplet {
     {
         // Draw graphPaper
         background(0); // white
-        for (int i = 0; i<=width/10; i++) {
+        /*for (int i = 0; i<=width/10; i++) {
             stroke(20); // gray
             line((-frameCount%10)+i*10, 0, (-frameCount%10)+i*10, height);
             line(0, i*10, width, i*10);
-        }
+        }*/
 
         //Must init column names
         if(!columnNamesInited)
@@ -109,10 +119,19 @@ public class ProcessingSerialGraph extends PApplet {
             text(COLUMN_NAMES[val_num] + " [" + String.valueOf(MIN_VALUES[val_num]) + "; " + String.valueOf(MAX_VALUES[val_num]) + "]", 10, graphBottom + 20);
             noFill();
 
+
+            float xpos = width;
+            float ypos;
+
             beginShape();
-            for(int i = 0; i < COLUMN_DATA[val_num].length; i++)
+            for(int i = COLUMN_DATA[val_num].length - 1; i > 0; i--)
             {
-                float ypos;
+                if(i < width - 1)
+                {
+                    float offset = (float) width / showGraphTime * MILLIS_BETWEEN_PACK[i];
+                    xpos = xpos - offset;
+                }
+
                 if(showAllGraphsOnOneAxis)
                 {
                     ypos = map(COLUMN_DATA[val_num][i], MIN_VALUES[val_num], MAX_VALUES[val_num], 0, height);
@@ -120,20 +139,17 @@ public class ProcessingSerialGraph extends PApplet {
                 else
                 {
                     ypos = map(COLUMN_DATA[val_num][i], MIN_VALUES[val_num], MAX_VALUES[val_num], 0, height/COLUMN_DATA.length);
-
                     ypos = ypos + graphBottom;
                 }
 
-                vertex(i,ypos);
+                vertex(xpos, ypos);
+
+                if(xpos < 0)
+                {
+                    break;
+                }
             }
             endShape();
-
-
-            // put all data one array back
-            for(int i = 1; i < COLUMN_DATA[val_num].length; i++)
-            {
-                COLUMN_DATA[val_num][i-1] = COLUMN_DATA[val_num][i];
-            }
         }
 
     }
@@ -147,21 +163,39 @@ public class ProcessingSerialGraph extends PApplet {
     }
 
     public void serialEvent (Serial arduino) {
-        String[] packet;
         String[] incomingValues;
-        int arduinoMillis;
 
         serialData = arduino.readStringUntil('\n');
         serialData = trim(serialData);
-        if (serialData != null) {
+        if (serialData != null && !serialData.equals("")) {
             if(columnNamesInited)
             {
-                arduinoMillis = 0;
-                packet = split(serialData, "|");
-                if(packet.length == 2)
+                // put all data and related timings one array back
+                for(int i = 1; i < width; i++)
                 {
-                    arduinoMillis = Integer.parseInt(packet[packet.length - 1]);
-                    serialData = packet[0];
+                    for(int val_num = 0; val_num < COLUMN_DATA.length; val_num++)
+                    {
+                        COLUMN_DATA[val_num][i-1] = COLUMN_DATA[val_num][i];
+                    }
+
+                    MILLIS_BETWEEN_PACK[i-1] = MILLIS_BETWEEN_PACK[i];
+                }
+
+
+                String[] packMillis = split(serialData, "|");
+                if(packMillis.length == 2)
+                {
+                    int arduinoMillis = Integer.parseInt(packMillis[packMillis.length - 1]);
+                    if(deltaMillisCalc)
+                    {
+                        MILLIS_BETWEEN_PACK[width-1] = arduinoMillis - lastMillis;
+                    }
+                    else
+                    {
+                        deltaMillisCalc = true;
+                    }
+                    lastMillis = arduinoMillis;
+                    serialData = packMillis[0];
                 }
 
 
