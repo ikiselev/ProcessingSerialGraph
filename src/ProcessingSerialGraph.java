@@ -14,9 +14,11 @@ public class ProcessingSerialGraph extends PApplet {
     int[][] COLUMN_DATA;
 
     int showGraphTime = 10000; //10sec
+    int lineSeparatorEvery = 1000; //1sec
 
     int[] MILLIS_BETWEEN_PACK;
     int lastMillis = 0;
+    int millisValuesCounter = 0;
 
 
     int[] MIN_VALUES;
@@ -189,6 +191,10 @@ public class ProcessingSerialGraph extends PApplet {
                     if(deltaMillisCalc)
                     {
                         MILLIS_BETWEEN_PACK[width-1] = arduinoMillis - lastMillis;
+                        if(millisValuesCounter < width)
+                        {
+                            millisValuesCounter++;
+                        }
                     }
                     else
                     {
