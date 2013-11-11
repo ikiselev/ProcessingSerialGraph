@@ -9,6 +9,10 @@ public class ProcessingSerialGraph extends PApplet {
     String useSerialPort[] = {"COM7"};
     Graph graph = new Graph(this);
 
+    static public void main(String args[]) {
+        PApplet.main(new String[]{"ProcessingSerialGraph"});
+    }
+
     protected Serial getSerial()
     {
         Serial result = null;
