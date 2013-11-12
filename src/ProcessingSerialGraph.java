@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class ProcessingSerialGraph extends PApplet {
 
     Serial arduino;
-    String useSerialPort[] = {"COM7"};
+    String useSerialPort[] = {"COM7", "/dev/tty.usbserial-AH01RRV0"};
     Graph graph = new Graph(this);
 
     static public void main(String args[]) {
