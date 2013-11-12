@@ -5,8 +5,12 @@ import java.util.Arrays;
 
 public class ProcessingSerialGraph extends PApplet {
 
-    Serial arduino;
     String useSerialPort[] = {"COM7", "COM5", "/dev/tty.usbserial-AH01RRV0"};
+    int windowWidth = 1200;
+    int windowHeight = 700;
+
+
+    Serial arduino;
     Graph graph = new Graph(this);
 
     static public void main(String args[]) {
@@ -40,7 +44,7 @@ public class ProcessingSerialGraph extends PApplet {
 
     public void setup()
     {
-        size(1200, 700);
+        size(windowWidth, windowHeight);
 
         arduino = getSerial();
         smooth();

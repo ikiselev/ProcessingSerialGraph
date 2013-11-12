@@ -55,7 +55,7 @@ public class Graph {
             return;
         }
 
-        drawNet();
+        this.drawNet();
 
         // redraw each graph
         for(int val_num = 0; val_num < COLUMN_DATA.length; val_num++)
@@ -129,6 +129,43 @@ public class Graph {
             mainWindow.stroke(20); // gray
             mainWindow.line(0, i*10, width, i*10);
         }
+
+
+        /**
+         * UNSTABLE, NOT-WORKING
+         */
+        float lineOffset = width;
+        int lineEveryMs = 1000;
+        int timings = 0;
+        int limitTimings = lineEveryMs;
+
+        for (int i = 0; i < millisValuesCounter; i++) {
+            int index = width - 1 - i;
+            timings += MILLIS_BETWEEN_PACK[index];
+            if (timings > lineEveryMs && limitTimings >= lineEveryMs) {
+                int mod = timings % lineEveryMs;
+                int lineNums = timings / lineEveryMs;
+
+                for (int lineNum = 0; lineNum < lineNums; lineNum++) {
+                    float secondOffset = (float) width / showGraphTime * 1000;
+                    lineOffset = lineOffset - secondOffset;
+
+
+                    float offset = (float) width / showGraphTime * timings + mod;
+                    limitTimings = timings - lineEveryMs;
+
+                    drawSecondsLine(lineOffset);
+                }
+
+            }
+        }
+
+
+    }
+
+    public void drawSecondsLine(float xPos)
+    {
+        mainWindow.line(xPos, 0, xPos, mainWindow.height);
     }
 
     public void processData(String serialData)
@@ -194,7 +231,7 @@ public class Graph {
         }
 
         System.out.print("Init string from arduino: ");
-        System.out.print(serialData);
+        System.out.println(serialData);
 
         serialData = serialData.substring(startColumnsIndex + 1);
         COLUMN_NAMES = serialData.split(",");

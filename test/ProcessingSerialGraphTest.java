@@ -1,3 +1,4 @@
+import org.junit.Assert;
 import org.junit.Test;
 import processing.core.PApplet;
 
@@ -7,6 +8,9 @@ public class ProcessingSerialGraphTest {
     @Test
     public void testDraw() throws Exception {
         ProcessingSerialGraph window = new ProcessingSerialGraphMock();
+
+        GraphMock graph = new GraphMock(window);
+        window.graph = graph;
 
         String[] args = {""};
         PApplet.runSketch(args, window);
@@ -21,8 +25,15 @@ public class ProcessingSerialGraphTest {
         processData(window, "827,-13855,342,35,268,-1109|700");
         processData(window, "3063,-17567,367,-89,191,-1171|800");
         processData(window, "6892,-18698,4,-117,191,-1095|900");
-
         processData(window, "8245,-16985,96,-117,184,-1095|1100");
+
+
+        window.graph.drawNet();
+        Assert.assertEquals(1, graph.SecondsLineSeparatorXPos.size());
+        float xPosSecondLine = graph.SecondsLineSeparatorXPos.get(0);
+        //TODO: in real it is not 1080.0f. Make test-config for size(w,h) first!
+        Assert.assertEquals(1080.0f, xPosSecondLine, 0.1f);
+
         processData(window, "9143,-13561,-145,-231,191,-1146|1200");
         processData(window, "8770,3649,254,-214,194,-1030|1300");
         processData(window, "7630,8853,502,-214,194,-1030|1400");
@@ -46,6 +57,6 @@ public class ProcessingSerialGraphTest {
          * Visualize graph
          */
         window.graph.processData(sData);
-        window.delay(500);
+        window.delay(150);
     }
 }
