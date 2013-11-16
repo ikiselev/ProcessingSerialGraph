@@ -1,19 +1,21 @@
+import Preprocessors.PreprocessorI;
+
+import java.util.ArrayList;
+
 public class DataProcessor {
 
     int width;
 
-
     //Override
     int minValue = -40000;
     int maxValue = 40000;
-
-
 
     boolean deltaMillisCalc = false;
     int lastMillis = 0;
 
     GraphData graphData;
 
+    ArrayList<PreprocessorI> preprocessors = new ArrayList<PreprocessorI>();
 
     public DataProcessor(int width) {
         this.graphData = new GraphData();
@@ -27,9 +29,6 @@ public class DataProcessor {
             initColumnNames(serialData);
             return;
         }
-
-        shiftData();
-
 
         String[] packMillis = serialData.split("\\|");
         if(packMillis.length == 2)
@@ -62,12 +61,50 @@ public class DataProcessor {
 
 
         String[] incomingValues = serialData.split(",");
+        int[] values = new int[incomingValues.length];
 
         for(int val_num = 0; val_num < incomingValues.length; val_num++)
         {
-            this.graphData.COLUMN_DATA[val_num][width-1] = Integer.parseInt(incomingValues[val_num]);
+            values[val_num] = Integer.parseInt(incomingValues[val_num]);
         }
 
+        processValues(values);
+    }
+
+    void processValues(int[] incomingValues)
+    {
+        if(preprocessors.size() == 1) //Supports only one preprocessor now..
+        {
+            for(PreprocessorI Preprocessor: preprocessors)
+            {
+                /**
+                 * Записываем результат, если только разрешает allowShiftData,
+                 * т.к. препроцессору может потребоваться несколько пачек данных
+                 */
+                int[] result = Preprocessor.processValues(incomingValues);
+                if(Preprocessor.allowShiftData())
+                {
+                    addData(result);
+                }
+            }
+        }
+        else
+        {
+            addData(incomingValues);
+        }
+    }
+
+    void addData(int[] processedValues)
+    {
+        /**
+         * Default preprocessing...
+         */
+        for(int val_num = 0; val_num < processedValues.length; val_num++)
+        {
+            this.graphData.COLUMN_DATA[val_num][width-1] = processedValues[val_num];
+        }
+
+        shiftData();
     }
 
     protected void shiftData() {
@@ -153,6 +190,12 @@ public class DataProcessor {
         graphData.columnNamesInited = true;
 
         return true;
+    }
+
+    void addPreprocessor(PreprocessorI preprocessor)
+    {
+
+        preprocessors.add(preprocessor);
     }
 
 }

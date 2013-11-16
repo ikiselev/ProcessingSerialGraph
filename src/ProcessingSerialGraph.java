@@ -1,3 +1,4 @@
+import Preprocessors.AccelerometerToSI;
 import processing.core.PApplet;
 import processing.serial.Serial;
 
@@ -46,8 +47,11 @@ public class ProcessingSerialGraph extends PApplet {
     public void setup()
     {
         size(windowWidth, windowHeight);
-        dataProcessor = new DataProcessor(windowWidth);
+
         graph = new Graph(this, windowWidth);
+
+        dataProcessor = new DataProcessor(windowWidth);
+        dataProcessor.addPreprocessor(new AccelerometerToSI());
 
         arduino = getSerial();
         smooth();
