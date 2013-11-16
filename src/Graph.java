@@ -14,8 +14,9 @@ public class Graph {
     int lineSeparatorEvery = 1000; //1sec
 
     int[] MILLIS_BETWEEN_PACK;
+    int timingOffset = 0;
+
     int lastMillis = 0;
-    int millisValuesCounter = 0;
 
 
     int[] MIN_VALUES;
@@ -88,9 +89,10 @@ public class Graph {
             mainWindow.beginShape();
             for(int i = COLUMN_DATA[val_num].length - 1; i > 0; i--)
             {
+                //TODO: move xpos calc upper
                 if(i < width - 1)
                 {
-                    float offset = (float) width / showGraphTime * MILLIS_BETWEEN_PACK[i];
+                    float offset = (float) width / (float) showGraphTime * (float)MILLIS_BETWEEN_PACK[i];
                     xpos = xpos - offset;
                 }
 
@@ -130,36 +132,12 @@ public class Graph {
             mainWindow.line(0, i*10, width, i*10);
         }
 
-
-        /**
-         * UNSTABLE, NOT-WORKING
-         */
-        float lineOffset = width;
-        int lineEveryMs = 1000;
-        int timings = 0;
-        int limitTimings = lineEveryMs;
-
-        for (int i = 0; i < millisValuesCounter; i++) {
-            int index = width - 1 - i;
-            timings += MILLIS_BETWEEN_PACK[index];
-            if (timings > lineEveryMs && limitTimings >= lineEveryMs) {
-                int mod = timings % lineEveryMs;
-                int lineNums = timings / lineEveryMs;
-
-                for (int lineNum = 0; lineNum < lineNums; lineNum++) {
-                    float secondOffset = (float) width / showGraphTime * 1000;
-                    lineOffset = lineOffset - secondOffset;
-
-
-                    float offset = (float) width / showGraphTime * timings + mod;
-                    limitTimings = timings - lineEveryMs;
-
-                    drawSecondsLine(lineOffset);
-                }
-
-            }
+        for(int i=0; i < showGraphTime / lineSeparatorEvery; i++)
+        {
+            float lineTimeMs = timingOffset + lineSeparatorEvery * i;
+            float lineXpos = (float)width - ((float)width / (float)showGraphTime * lineTimeMs);
+            drawSecondsLine(lineXpos);
         }
-
 
     }
 
@@ -192,19 +170,24 @@ public class Graph {
         if(packMillis.length == 2)
         {
             int arduinoMillis = Integer.parseInt(packMillis[packMillis.length - 1]);
-            if(deltaMillisCalc)
+
+            if(!deltaMillisCalc)
             {
-                MILLIS_BETWEEN_PACK[width - 1] = arduinoMillis - lastMillis;
-                if(millisValuesCounter < width)
-                {
-                    millisValuesCounter++;
-                }
+                lastMillis = 0;
             }
-            else
+            int diff = arduinoMillis - lastMillis;
+            MILLIS_BETWEEN_PACK[width - 1] = diff;
+            timingOffset += diff;
+            if(timingOffset > lineSeparatorEvery)
             {
-                deltaMillisCalc = true;
+                timingOffset = timingOffset % lineSeparatorEvery;
             }
+
+
             lastMillis = arduinoMillis;
+            deltaMillisCalc = true;
+
+
             serialData = packMillis[0];
         }
 
