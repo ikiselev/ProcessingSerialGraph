@@ -1,4 +1,5 @@
 import Preprocessors.AccelerometerToSI;
+import Preprocessors.RecursiveFilter;
 import processing.core.PApplet;
 import processing.serial.Serial;
 
@@ -51,7 +52,7 @@ public class ProcessingSerialGraph extends PApplet {
         graph = new Graph(this, windowWidth);
 
         dataProcessor = new DataProcessor(windowWidth);
-        dataProcessor.addPreprocessor(new AccelerometerToSI());
+        dataProcessor.addPreprocessor(new RecursiveFilter());
 
         arduino = getSerial();
         smooth();
