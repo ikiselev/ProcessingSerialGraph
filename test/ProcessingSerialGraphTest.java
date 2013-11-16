@@ -16,31 +16,44 @@ public class ProcessingSerialGraphTest {
         PApplet.runSketch(args, window);
 
         window.graph.initColumnNames("TestColumns:gyro.x{-32768;32767},gyro.y{-32768;32767},gyro.z{-32768;32767},acc.x{-2048;2047},acc.y{-2048;2047},acc.z{-2048;2047}", 1200);
-        processData(window, "-72,-59,-78,-69,11,-1011|100");
-        processData(window, "-17,-32,-71,-61,-5,-1026|200");
-        processData(window, "-32,-71,-78,-55,0,-1021|300");
-        processData(window, "-65,-40,-35,-54,1,-1000|400");
-        processData(window, "-2,-79,-61,-46,-13,-1014|500");
-        processData(window, "-11,-63,-80,-45,-10,-1014|600");
-        processData(window, "827,-13855,342,35,268,-1109|700");
-        processData(window, "3063,-17567,367,-89,191,-1171|800");
-        processData(window, "6892,-18698,4,-117,191,-1095|900");
-        processData(window, "8245,-16985,96,-117,184,-1095|1100");
 
 
-        window.graph.drawNet();
-        Assert.assertEquals(1, graph.SecondsLineSeparatorXPos.size());
+        /**
+         * One line, 200 ms behind
+         */
+        processData(window, "-14472,0,-78,-169,200,-501|200");
+        /**
+         * One line, 700 ms behind
+         */
+        processData(window, "-8572,-59,-78,-269,11,-801|700");
+        /**
+         * One line, 1000ms ahead, 100ms behind
+         */
+        processData(window, "-17,-32,-71,-161,-5,-926|1100");
+        //One line, 1000ms ahead, 600ms behind
+        processData(window, "-32,-71,-78,-55,0,-1021|1600");
+        //And so on..,  1000ms ahead, 900 ms behind
+        processData(window, "-65,-40,-35,-54,-61,-1000|1900");
+
+        /**
+         * Two lines, 100ms from last line to right side of window
+         */
+        processData(window, "-2,-79,-61,-46,-113,-1014|2100");
+        /**
+         * Two lines, 800ms from second line to right side of window
+         */
+        processData(window, "-11,-63,-80,-45,-99,-1014|2800");
+        /**
+         * Three lines, |____nothing_____|_1000ms_|_1000ms_|_200ms|
+         */
+        processData(window, "3063,-17567,367,-89,191,-1171|3200");
+
+
+        //window.graph.drawNet();
+        /*Assert.assertEquals(1, graph.SecondsLineSeparatorXPos.size());
         float xPosSecondLine = graph.SecondsLineSeparatorXPos.get(0);
         //TODO: in real it is not 1080.0f. Make test-config for size(w,h) first!
-        Assert.assertEquals(1080.0f, xPosSecondLine, 0.1f);
-
-        processData(window, "9143,-13561,-145,-231,191,-1146|1200");
-        processData(window, "8770,3649,254,-214,194,-1030|1300");
-        processData(window, "7630,8853,502,-214,194,-1030|1400");
-        processData(window, "3834,7811,710,-130,109,-829|1500");
-        processData(window, "1784,12073,757,-229,97,-976|1600");
-        processData(window, "-2296,25494,594,-152,65,-909|1700");
-
+        Assert.assertEquals(1080.0f, xPosSecondLine, 0.1f);*/
 
         /**
          * This loop should be here to avoid window closing
@@ -57,6 +70,6 @@ public class ProcessingSerialGraphTest {
          * Visualize graph
          */
         window.graph.processData(sData);
-        window.delay(150);
+        window.delay(250);
     }
 }
