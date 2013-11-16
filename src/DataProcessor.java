@@ -28,16 +28,7 @@ public class DataProcessor {
             return;
         }
 
-        // put all data and related timings one array back
-        for(int i = 1; i < width; i++)
-        {
-            for(int val_num = 0; val_num < this.graphData.COLUMN_DATA.length; val_num++)
-            {
-                this.graphData.COLUMN_DATA[val_num][i-1] = this.graphData.COLUMN_DATA[val_num][i];
-            }
-
-            graphData.MILLIS_BETWEEN_PACK[i-1] = graphData.MILLIS_BETWEEN_PACK[i];
-        }
+        shiftData();
 
 
         String[] packMillis = serialData.split("\\|");
@@ -50,7 +41,11 @@ public class DataProcessor {
                 lastMillis = 0;
             }
             int diff = arduinoMillis - lastMillis;
-            graphData.MILLIS_BETWEEN_PACK[width - 1] = diff;
+            /**
+             * Чтобы не потерять время, если не была вызвана shiftData в препроцессорах
+             */
+            graphData.MILLIS_BETWEEN_PACK[width - 1] += diff;
+
             graphData.timingOffset += diff;
             if(graphData.timingOffset > graphData.lineSeparatorEvery)
             {
@@ -73,6 +68,21 @@ public class DataProcessor {
             this.graphData.COLUMN_DATA[val_num][width-1] = Integer.parseInt(incomingValues[val_num]);
         }
 
+    }
+
+    protected void shiftData() {
+        // put all data and related timings one array back
+        for(int i = 1; i < width; i++)
+        {
+            for(int val_num = 0; val_num < this.graphData.COLUMN_DATA.length; val_num++)
+            {
+                this.graphData.COLUMN_DATA[val_num][i-1] = this.graphData.COLUMN_DATA[val_num][i];
+            }
+
+            graphData.MILLIS_BETWEEN_PACK[i-1] = graphData.MILLIS_BETWEEN_PACK[i];
+        }
+
+        graphData.MILLIS_BETWEEN_PACK[width - 1] = 0;
     }
 
 
