@@ -11,7 +11,8 @@ public class ProcessingSerialGraph extends PApplet {
 
 
     Serial arduino;
-    Graph graph = new Graph(this);
+    DataProcessor dataProcessor;
+    Graph graph;
 
     static public void main(String args[]) {
         PApplet.main(new String[]{"ProcessingSerialGraph"});
@@ -45,6 +46,8 @@ public class ProcessingSerialGraph extends PApplet {
     public void setup()
     {
         size(windowWidth, windowHeight);
+        dataProcessor = new DataProcessor(windowWidth);
+        graph = new Graph(this, windowWidth);
 
         arduino = getSerial();
         smooth();
@@ -53,7 +56,7 @@ public class ProcessingSerialGraph extends PApplet {
     public void draw()
     {
         background(0); // black
-        graph.drawGraph();
+        graph.drawGraph(dataProcessor.graphData);
     }
 
     public void serialEvent (Serial arduino)
@@ -61,14 +64,7 @@ public class ProcessingSerialGraph extends PApplet {
         String serialData = arduino.readStringUntil('\n');
         serialData = trim(serialData);
         if (serialData != null && !serialData.equals("")) {
-            if(graph.columnNamesInited)
-            {
-                graph.processData(serialData);
-            }
-            else
-            {
-                graph.initColumnNames(serialData, width);
-            }
+            dataProcessor.processData(serialData);
         }
 
         arduino.clear();

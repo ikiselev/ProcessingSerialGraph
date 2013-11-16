@@ -5,17 +5,24 @@ import processing.core.PApplet;
 
 
 public class ProcessingSerialGraphTest {
+    DataProcessor dataProcessor;
+    GraphMock graph;
+
+
     @Test
     public void testDraw() throws Exception {
         ProcessingSerialGraph window = new ProcessingSerialGraphMock();
 
-        GraphMock graph = new GraphMock(window);
+        graph = new GraphMock(window, 1200);
         window.graph = graph;
 
         String[] args = {""};
         PApplet.runSketch(args, window);
 
-        window.graph.initColumnNames("TestColumns:gyro.x{-32768;32767},gyro.y{-32768;32767},gyro.z{-32768;32767},acc.x{-2048;2047},acc.y{-2048;2047},acc.z{-2048;2047}", 1200);
+
+        dataProcessor = new DataProcessor(1200);
+
+        dataProcessor.initColumnNames("TestColumns:gyro.x{-32768;32767},gyro.y{-32768;32767},gyro.z{-32768;32767},acc.x{-2048;2047},acc.y{-2048;2047},acc.z{-2048;2047}");
 
         /**
          * I'm sorry for commented code. I must go on...
@@ -102,7 +109,8 @@ public class ProcessingSerialGraphTest {
         /**
          * Visualize graph
          */
-        window.graph.processData(sData);
+        dataProcessor.processData(sData);
+        graph.drawGraph(dataProcessor.graphData);
         window.delay(250);
     }
 }
