@@ -3,7 +3,7 @@ public class GraphData
     public boolean columnNamesInited = false;
 
     String[] COLUMN_NAMES;
-    int[][] COLUMN_DATA;
+    float[][] COLUMN_DATA;
 
     int[] MILLIS_BETWEEN_PACK;
 

@@ -2,6 +2,6 @@ package Preprocessors;
 
 
 public interface PreprocessorI {
-    int[] processValues(int[] incomingValues);
+    float[] processValues(float[] incomingValues);
     boolean allowShiftData();
 }

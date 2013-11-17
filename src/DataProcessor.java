@@ -61,17 +61,17 @@ public class DataProcessor {
 
 
         String[] incomingValues = serialData.split(",");
-        int[] values = new int[incomingValues.length];
+        float[] values = new float[incomingValues.length];
 
         for(int val_num = 0; val_num < incomingValues.length; val_num++)
         {
-            values[val_num] = Integer.parseInt(incomingValues[val_num]);
+            values[val_num] = Float.parseFloat(incomingValues[val_num]);
         }
 
         processValues(values);
     }
 
-    void processValues(int[] incomingValues)
+    void processValues(float[] incomingValues)
     {
         if(preprocessors.size() == 1) //Supports only one preprocessor now..
         {
@@ -81,7 +81,7 @@ public class DataProcessor {
                  * Записываем результат, если только разрешает allowShiftData,
                  * т.к. препроцессору может потребоваться несколько пачек данных
                  */
-                int[] result = Preprocessor.processValues(incomingValues);
+                float[] result = Preprocessor.processValues(incomingValues);
                 if(Preprocessor.allowShiftData())
                 {
                     addData(result);
@@ -94,7 +94,7 @@ public class DataProcessor {
         }
     }
 
-    void addData(int[] processedValues)
+    void addData(float[] processedValues)
     {
         /**
          * Default preprocessing...
@@ -184,7 +184,7 @@ public class DataProcessor {
 
 
         //Making buffer
-        this.graphData.COLUMN_DATA = new int[this.graphData.COLUMN_NAMES.length][width];
+        this.graphData.COLUMN_DATA = new float[this.graphData.COLUMN_NAMES.length][width];
         graphData.MILLIS_BETWEEN_PACK = new int[width];
 
         graphData.columnNamesInited = true;

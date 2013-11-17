@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class ProcessingSerialGraph extends PApplet {
 
-    String useSerialPort[] = {"COM7", "COM5", "/dev/tty.usbserial-AH01RRV0"};
+    String useSerialPort[] = {"COM7", "COM5", "COM8", "/dev/tty.usbserial-AH01RRV0"};
     int windowWidth = 1200;
     int windowHeight = 700;
 

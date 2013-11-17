@@ -6,8 +6,8 @@ public class AccelerometerToSI implements PreprocessorI {
     int counter = 0;
 
     @Override
-    public int[] processValues(int[] incomingValues) {
-        int[] result = new int[incomingValues.length];
+    public float[] processValues(float[] incomingValues) {
+        float[] result = new float[incomingValues.length];
 
         for(int val_num = 0; val_num < incomingValues.length; val_num++)
         {
