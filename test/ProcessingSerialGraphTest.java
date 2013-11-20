@@ -31,46 +31,41 @@ public class ProcessingSerialGraphTest {
         /**
          * One line, 200 ms behind
          */
-        /*processData(window, "-14472,0,-78,-169,200,-501|200");
-        window.graph.drawNet();*/
-        /*Assert.assertEquals(1, graph.SecondsLineSeparatorXPos.size());
+        processData(window, "-14472,0,-78,-169,200,-501|200");
+
+//        Assert.assertEquals(1, graph.SecondsLineSeparatorXPos.size());
         // 1176.0f = 1200 - (1200 / 10000 * 200)
         // 1176.0f = width - (width / windowShowTime * 200ms). windowShowTime - time that fits on window, 10sec
-        Assert.assertEquals(1176.0f, graph.SecondsLineSeparatorXPos.get(0), 0.1f);*/
+        Assert.assertEquals(1176.0f, graph.SecondsLineSeparatorXPos.get(0), 0.1f);
 
 
 
         /**
          * One line, 700 ms behind
          */
-        /*processData(window, "-8572,-59,-78,-269,11,-801|700");
-        window.graph.drawNet();*/
-        /*Assert.assertEquals(1, graph.SecondsLineSeparatorXPos.size());
+        processData(window, "-8572,-59,-78,-269,11,-801|700");
         //1116.0f = 1200 - (1200 / 10000 * 700)
-        Assert.assertEquals(1116.0f, graph.SecondsLineSeparatorXPos.get(0), 0.1f);*/
+        Assert.assertEquals(1116.0f, graph.SecondsLineSeparatorXPos.get(0), 0.1f);
 
 
 
         /**
          * One line, 1000ms ahead, 100ms behind
          */
-        /*processData(window, "-17,-32,-71,-161,-5,-926|1100");
-        window.graph.drawNet();*/
-        /*Assert.assertEquals(2, graph.SecondsLineSeparatorXPos.size());
+        processData(window, "-17,-32,-71,-161,-5,-926|1100");
         // 1100 > 1000, so 2 lines:
         //1188.0f = 1200 - (1200 / 10000 * (1100 - 1000))
         Assert.assertEquals(1188.0f, graph.SecondsLineSeparatorXPos.get(0), 0.1f);
         //1068.0f = 1200 - (1200 / 10000 * 1100)
-        Assert.assertEquals(1068.0f, graph.SecondsLineSeparatorXPos.get(1), 0.1f);*/
+        Assert.assertEquals(1068.0f, graph.SecondsLineSeparatorXPos.get(1), 0.1f);
         //Assert.assertEquals(1188.0f, graph.SecondsLineSeparatorXPos.get(0), 0.1f); // If not in this order
 
 
         /**
          * We had delay in microcontroller, now is 10.7 sec!
          */
-        /*processData(window, "-2,-79,-61,-46,-113,-1014|10700");
-        window.graph.drawNet();*/
-        /*Assert.assertEquals(10, graph.SecondsLineSeparatorXPos.size());
+        processData(window, "-2,-79,-61,-46,-113,-1014|10700");
+        Assert.assertEquals(10, graph.SecondsLineSeparatorXPos.size());
         //1116.0f = 1200 - (1200 / 10000 * 700)
         Assert.assertEquals(1116.0f, graph.SecondsLineSeparatorXPos.get(0), 0.1f);
         //996.0f = 1200 - (1200 / 10000 * 1700)
@@ -90,7 +85,7 @@ public class ProcessingSerialGraphTest {
         //156.0f = 1200 - (1200 / 10000 * 8700)
         Assert.assertEquals(156.0f, graph.SecondsLineSeparatorXPos.get(8), 0.1f);
         //36.0f = 1200 - (1200 / 10000 * 9700)
-        Assert.assertEquals(36.0f, graph.SecondsLineSeparatorXPos.get(9), 0.1f);*/
+        Assert.assertEquals(36.0f, graph.SecondsLineSeparatorXPos.get(9), 0.1f);
         //-84.0f = 1200 - (1200 / 10000 * 10700) - not drawn
 
 
@@ -110,6 +105,7 @@ public class ProcessingSerialGraphTest {
          * Visualize graph
          */
         dataProcessor.processData(sData);
+        graph.drawNet(dataProcessor.graphData.lineSeparatorEvery, dataProcessor.graphData.timingOffset);
         graph.drawGraph(dataProcessor.graphData);
         window.delay(250);
     }

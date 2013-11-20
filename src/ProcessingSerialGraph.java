@@ -1,4 +1,3 @@
-import Preprocessors.AccelerometerToSI;
 import Preprocessors.RecursiveFilter;
 import processing.core.PApplet;
 import processing.serial.Serial;
