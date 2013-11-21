@@ -11,7 +11,7 @@ public class ProcessingSerialGraphTest {
 
     @Test
     public void testDraw() throws Exception {
-        ProcessingSerialGraph window = new ProcessingSerialGraphMock();
+        ProcessingSerialGraphMock window = new ProcessingSerialGraphMock();
 
         graph = new GraphMock(window, 1200);
         window.graph = graph;
@@ -21,6 +21,7 @@ public class ProcessingSerialGraphTest {
 
 
         dataProcessor = new DataProcessor(1200);
+        window.dataProcessor = dataProcessor;
 
         dataProcessor.initColumnNames("TestColumns:gyro.x{-32768;32767},gyro.y{-32768;32767},gyro.z{-32768;32767},acc.x{-2048;2047},acc.y{-2048;2047},acc.z{-2048;2047}");
 
