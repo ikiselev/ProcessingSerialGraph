@@ -101,11 +101,6 @@ public class Graph {
 
                 mainWindow.vertex(xpos, ypos);
 
-                if(val_num == 5)
-                {
-                    System.out.println("[" + i + "] " + xpos + ";" + ypos + " time: " + (float)graphData.MILLIS_BETWEEN_PACK[i] + " data: " + graphData.COLUMN_DATA[val_num][i]);
-                }
-
                 if(xpos < 0)
                 {
                     break;
@@ -114,7 +109,6 @@ public class Graph {
             mainWindow.endShape();
         }
 
-        System.out.println("-----------");
     }
 
     public void drawLineSeparator(float graphBottom)
