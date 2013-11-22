@@ -60,7 +60,7 @@ public class ProcessingSerialGraph extends PApplet {
     public void draw()
     {
         background(0); // black
-        graph.drawGraph(dataProcessor.graphData);
+        this.getGraph().drawGraph(dataProcessor.graphData);
     }
 
     public void serialEvent (Serial arduino)
@@ -74,4 +74,12 @@ public class ProcessingSerialGraph extends PApplet {
         arduino.clear();
     }
 
+
+    public Graph getGraph() {
+        return this.graph;
+    }
+
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+    }
 }
