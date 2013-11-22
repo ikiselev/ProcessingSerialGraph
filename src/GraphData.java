@@ -9,6 +9,7 @@ public class GraphData
      * How many array values in COLUMN_DATA is not empty.
      */
     int valuesFilled = 0;
+    int elapsedTime = 0;
 
     int[] MILLIS_BETWEEN_PACK;
 

@@ -45,11 +45,13 @@ public class DataProcessor {
              */
             graphData.MILLIS_BETWEEN_PACK[width - 1] += diff;
 
+            graphData.elapsedTime += diff;
             graphData.timingOffset += diff;
             if(graphData.timingOffset > graphData.lineSeparatorEvery)
             {
                 graphData.timingOffset = graphData.timingOffset % graphData.lineSeparatorEvery;
             }
+
 
 
             lastMillis = arduinoMillis;

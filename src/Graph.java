@@ -44,7 +44,7 @@ public class Graph {
             initColorsArray(graphData);
         }
 
-        this.drawNet(graphData.lineSeparatorEvery, graphData.timingOffset);
+        this.drawNet(graphData.lineSeparatorEvery, graphData.timingOffset, graphData.elapsedTime);
 
         // redraw each graph
         for(int val_num = 0; val_num < graphData.COLUMN_DATA.length; val_num++)
@@ -119,18 +119,27 @@ public class Graph {
         mainWindow.strokeWeight(1);
     }
 
-    public void drawNet(int lineSeparatorEvery, int timingOffset)
+    public void drawNet(int lineSeparatorEvery, int timingOffset, int elapsedTime)
     {
         for (int i = 0; i<=width/10; i++) {
             mainWindow.stroke(20); // gray
             mainWindow.line(0, i*10, width, i*10);
         }
 
+        mainWindow.fill(70);
+        mainWindow.textSize(11);
+
+        int rightValueSeconds = (int)Math.floor(elapsedTime / lineSeparatorEvery);
         for(int i=0; i < showGraphTime / lineSeparatorEvery; i++)
         {
             float lineTimeMs = timingOffset + lineSeparatorEvery * i;
             float lineXpos = (float)width - ((float)width / (float)showGraphTime * lineTimeMs);
             drawSecondsLine(lineXpos);
+            if(rightValueSeconds >= 0)
+            {
+                mainWindow.text(rightValueSeconds + "s",lineXpos,30);
+                rightValueSeconds--;
+            }
         }
 
     }
