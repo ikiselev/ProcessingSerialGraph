@@ -10,6 +10,7 @@ public class ProcessingSerialGraphMock extends ProcessingSerialGraph
     public void setup()
     {
         size(windowWidth, windowHeight);
+        noLoop();
         smooth();
     }
 

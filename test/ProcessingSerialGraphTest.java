@@ -25,7 +25,7 @@ public class ProcessingSerialGraphTest {
         /**
          * One line, 200 ms behind
          */
-        processData(window, "-14472,0,-78,-169,200,-501|200");
+        processEvent(window, "-14472,0,-78,-169,200,-501|200");
 
         //TODO: Asserts are available only after redraw. But we can't redraw directly bypass draw method.
 
@@ -39,7 +39,7 @@ public class ProcessingSerialGraphTest {
         /**
          * One line, 700 ms behind
          */
-        processData(window, "-8572,-59,-78,-269,11,-801|700");
+        processEvent(window, "-8572,-59,-78,-269,11,-801|700");
         //1116.0f = 1200 - (1200 / 10000 * 700)
         //Assert.assertEquals(1116.0f, window.graph.SecondsLineSeparatorXPos.get(0), 0.1f);
 
@@ -48,7 +48,7 @@ public class ProcessingSerialGraphTest {
         /**
          * One line, 1000ms ahead, 100ms behind
          */
-        processData(window, "-17,-32,-71,-161,-5,-926|1100");
+        processEvent(window, "-17,-32,-71,-161,-5,-926|1100");
         // 1100 > 1000, so 2 lines:
         //1188.0f = 1200 - (1200 / 10000 * (1100 - 1000))
         //Assert.assertEquals(1188.0f, window.graph.SecondsLineSeparatorXPos.get(0), 0.1f);
@@ -59,9 +59,10 @@ public class ProcessingSerialGraphTest {
 
         /**
          * We had delay in microcontroller, now is 10.7 sec!
+         * TODO: unexpected graph trajectory
          */
-        /*processData(window, "-2,-79,-61,-46,-113,-1014|10700");
-        Assert.assertEquals(10, graph.SecondsLineSeparatorXPos.size());
+        processEvent(window, "-32152,-32100,-25000,-2000,2000,-1800|10700");
+        /*Assert.assertEquals(10, graph.SecondsLineSeparatorXPos.size());
         //1116.0f = 1200 - (1200 / 10000 * 700)
         Assert.assertEquals(1116.0f, graph.SecondsLineSeparatorXPos.get(0), 0.1f);
         //996.0f = 1200 - (1200 / 10000 * 1700)
@@ -95,12 +96,13 @@ public class ProcessingSerialGraphTest {
         }
     }
 
-    protected void processData(ProcessingSerialGraph window, String sData)
+    protected void processEvent(ProcessingSerialGraph window, String sData)
     {
         /**
          * Visualize graph
          */
         window.dataProcessor.processData(sData);
-        window.delay(250);
+        window.redraw();
+        window.delay(1250);
     }
 }

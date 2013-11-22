@@ -47,6 +47,7 @@ public class ProcessingSerialGraph extends PApplet {
     public void setup()
     {
         size(windowWidth, windowHeight);
+        noLoop();
 
         graph = new Graph(this, windowWidth);
 
@@ -69,6 +70,7 @@ public class ProcessingSerialGraph extends PApplet {
         serialData = trim(serialData);
         if (serialData != null && !serialData.equals("")) {
             dataProcessor.processData(serialData);
+            redraw();
         }
 
         arduino.clear();
