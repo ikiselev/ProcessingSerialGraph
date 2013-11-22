@@ -5,6 +5,11 @@ public class GraphData
     String[] COLUMN_NAMES;
     float[][] COLUMN_DATA;
 
+    /**
+     * How many array values in COLUMN_DATA is not empty.
+     */
+    int valuesFilled = 0;
+
     int[] MILLIS_BETWEEN_PACK;
 
     //TODO: This is not good very good that GraphData knows about these values

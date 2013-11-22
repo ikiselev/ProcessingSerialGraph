@@ -74,8 +74,13 @@ public class Graph {
             float xpos = width;
             float ypos;
 
+            int leftIndex = graphData.COLUMN_DATA[val_num].length - graphData.valuesFilled - 1;
+            if(leftIndex < 0)
+            {
+                leftIndex = 0;
+            }
             mainWindow.beginShape();
-            for(int i = graphData.COLUMN_DATA[val_num].length - 1; i > 0; i--)
+            for(int i = graphData.COLUMN_DATA[val_num].length - 1; i > leftIndex; i--)
             {
                 //TODO: move xpos calc upper
                 if(i < width - 1)
@@ -96,6 +101,11 @@ public class Graph {
 
                 mainWindow.vertex(xpos, ypos);
 
+                if(val_num == 5)
+                {
+                    System.out.println("[" + i + "] " + xpos + ";" + ypos + " time: " + (float)graphData.MILLIS_BETWEEN_PACK[i] + " data: " + graphData.COLUMN_DATA[val_num][i]);
+                }
+
                 if(xpos < 0)
                 {
                     break;
@@ -103,6 +113,8 @@ public class Graph {
             }
             mainWindow.endShape();
         }
+
+        System.out.println("-----------");
     }
 
     public void drawLineSeparator(float graphBottom)

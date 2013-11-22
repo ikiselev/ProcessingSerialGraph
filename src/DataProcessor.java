@@ -37,7 +37,7 @@ public class DataProcessor {
 
             if(!deltaMillisCalc)
             {
-                lastMillis = 0;
+                lastMillis = arduinoMillis;
             }
             int diff = arduinoMillis - lastMillis;
             /**
@@ -96,6 +96,8 @@ public class DataProcessor {
 
     void addData(float[] processedValues)
     {
+        shiftData();
+
         /**
          * Default preprocessing...
          */
@@ -103,8 +105,6 @@ public class DataProcessor {
         {
             this.graphData.COLUMN_DATA[val_num][width-1] = processedValues[val_num];
         }
-
-        shiftData();
     }
 
     protected void shiftData() {
@@ -120,6 +120,10 @@ public class DataProcessor {
         }
 
         graphData.MILLIS_BETWEEN_PACK[width - 1] = 0;
+        if(graphData.valuesFilled < width)
+        {
+            graphData.valuesFilled++;
+        }
     }
 
 

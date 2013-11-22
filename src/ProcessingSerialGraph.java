@@ -47,7 +47,6 @@ public class ProcessingSerialGraph extends PApplet {
     public void setup()
     {
         size(windowWidth, windowHeight);
-        noLoop();
 
         graph = new Graph(this, windowWidth);
 
@@ -56,6 +55,7 @@ public class ProcessingSerialGraph extends PApplet {
 
         arduino = getSerial();
         smooth();
+        noLoop();
     }
 
     public void draw()
