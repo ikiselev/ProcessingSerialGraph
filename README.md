@@ -40,3 +40,5 @@ Graph preprocessors
 ![Recursive filter preprocessor](/screenshots/Preprocessor-RecursiveFilter.png)
 ###Recursive filter vs. raw data from accelerometer
 ![Recursive filter preprocessor](/screenshots/Recursive.vs.WithoutFilter.png)
+###Gyroscope angles
+![Gyroscope angles data processing](/screenshots/GyroDrift.jpg)
