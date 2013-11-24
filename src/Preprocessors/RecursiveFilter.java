@@ -13,7 +13,7 @@ public class RecursiveFilter implements PreprocessorI {
     float alpha = 0.1f;
 
     @Override
-    public float[] processValues(float[] incomingValues) {
+    public float[] processValues(float[] incomingValues, int millisBetweenPack) {
         float[] result = new float[incomingValues.length];
 
 

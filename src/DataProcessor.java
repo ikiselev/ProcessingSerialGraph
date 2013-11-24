@@ -70,10 +70,10 @@ public class DataProcessor {
             values[val_num] = Float.parseFloat(incomingValues[val_num]);
         }
 
-        processValues(values);
+        processValues(values, graphData.MILLIS_BETWEEN_PACK[width - 1]);
     }
 
-    void processValues(float[] incomingValues)
+    void processValues(float[] incomingValues, int millisBetweenPack)
     {
         if(preprocessors.size() == 1) //Supports only one preprocessor now..
         {
@@ -83,7 +83,7 @@ public class DataProcessor {
                  * Записываем результат, если только разрешает allowShiftData,
                  * т.к. препроцессору может потребоваться несколько пачек данных
                  */
-                float[] result = Preprocessor.processValues(incomingValues);
+                float[] result = Preprocessor.processValues(incomingValues, millisBetweenPack);
                 if(Preprocessor.allowShiftData())
                 {
                     addData(result);

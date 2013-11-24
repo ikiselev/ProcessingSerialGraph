@@ -27,7 +27,13 @@ public class ProcessingSerialGraph extends PApplet {
         dataProcessor = new DataProcessor(windowWidth);
         dataProcessor.addPreprocessor(new RecursiveFilter());
 
-        arduino = SerialPort.getSerial(this);
+        try
+        {
+            arduino = SerialPort.getSerial(this);
+        } catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
         smooth();
         noLoop();
     }
