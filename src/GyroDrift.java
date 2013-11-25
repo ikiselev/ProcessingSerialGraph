@@ -1,20 +1,12 @@
 import Preprocessors.GyroDegreesPerSecond;
 import processing.core.PApplet;
-import processing.serial.Serial;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-public class GyroDrift extends PApplet
+public class GyroDrift extends ProcessingApplet
 {
-    Serial arduino;
-
-    DataProcessor dataProcessor;
-
-    int dataLengh = 1;
-
-    int windowWidth = 1200;
-    int windowHeight = 700;
+    int dataProcessorWidth = 2;
 
     int BarLength = 250;
     int BarHight = 10;
@@ -35,18 +27,8 @@ public class GyroDrift extends PApplet
 
     public void setup()
     {
-        size(windowWidth, windowHeight, P3D);
-        try
-        {
-            arduino = SerialPort.getSerial(this);
-        } catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-
-        dataProcessor = new DataProcessor(dataLengh + 1);
+        super.setup();
         dataProcessor.addPreprocessor(new GyroDegreesPerSecond());
-
     }
 
     public void draw()
@@ -112,15 +94,12 @@ public class GyroDrift extends PApplet
         gyroAngleZ = 0.0f;
     }
 
-    public void serialEvent (Serial arduino)
+    public void processData (String serialData)
     {
-        String serialData = arduino.readStringUntil('\n');
         serialData = trim(serialData);
         if (serialData != null && !serialData.equals("")) {
             dataProcessor.processData(serialData);
         }
-
-        arduino.clear();
 
 
         int currentSecond = (int)Math.ceil(millis() / 1000);
@@ -135,13 +114,17 @@ public class GyroDrift extends PApplet
             packetsPerSeconds[index] = 0;
         }
 
-        gyroAngleX += dataProcessor.graphData.COLUMN_DATA[0][dataLengh];
-        gyroAngleY += dataProcessor.graphData.COLUMN_DATA[1][dataLengh];
-        gyroAngleZ += dataProcessor.graphData.COLUMN_DATA[2][dataLengh];
+        gyroAngleX += dataProcessor.graphData.COLUMN_DATA[0][getDataProcessorWidth() - 1];
+        gyroAngleY += dataProcessor.graphData.COLUMN_DATA[1][getDataProcessorWidth() - 1];
+        gyroAngleZ += dataProcessor.graphData.COLUMN_DATA[2][getDataProcessorWidth() - 1];
 
         packets++;
         packetsPerSeconds[index] += 1;
 
 
+    }
+
+    public int getDataProcessorWidth() {
+        return dataProcessorWidth;
     }
 }
