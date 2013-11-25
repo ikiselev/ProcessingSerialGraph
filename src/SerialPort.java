@@ -6,7 +6,7 @@ public class SerialPort
 {
     static String useSerialPort[] = {"COM7", "COM5", "COM8", "/dev/tty.usbserial-AH01RRV0"};
 
-    public static processing.serial.Serial getSerial(PApplet window) throws Exception
+    public static processing.serial.Serial getSerial(PApplet window)
     {
         processing.serial.Serial result = null;
 
@@ -23,7 +23,10 @@ public class SerialPort
 
         if(result == null)
         {
-            throw new Exception("Serial port not found");
+            System.out.println("Serial port not found");
+
+
+            return result;
         }
 
         result.clear();

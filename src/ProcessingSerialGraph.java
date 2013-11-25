@@ -2,8 +2,6 @@ import Preprocessors.RecursiveFilter;
 import processing.core.PApplet;
 import processing.serial.Serial;
 
-import java.util.Arrays;
-
 public class ProcessingSerialGraph extends PApplet {
 
     int windowWidth = 1200;
@@ -11,6 +9,8 @@ public class ProcessingSerialGraph extends PApplet {
 
 
     Serial arduino;
+    String filename = "SerialMockFile.txt";
+
     DataProcessor dataProcessor;
     Graph graph;
 
@@ -25,15 +25,20 @@ public class ProcessingSerialGraph extends PApplet {
         graph = new Graph(this, windowWidth);
 
         dataProcessor = new DataProcessor(windowWidth);
-        dataProcessor.addPreprocessor(new RecursiveFilter());
+        //dataProcessor.addPreprocessor(new RecursiveFilter());
 
-        try
+
+        if(filename != null)
+        {
+            SerialMockReader serialMockReader = new SerialMockReader(this, filename);
+            serialMockReader.start();
+        }
+        else
         {
             arduino = SerialPort.getSerial(this);
-        } catch(Exception e)
-        {
-            System.out.println(e.getMessage());
         }
+
+
         smooth();
         noLoop();
     }
@@ -47,15 +52,25 @@ public class ProcessingSerialGraph extends PApplet {
     public void serialEvent (Serial arduino)
     {
         String serialData = arduino.readStringUntil('\n');
+
+        this.processData(serialData);
+
+        arduino.clear();
+    }
+
+    public void fileEvent(String line)
+    {
+        this.processData(line);
+    }
+
+    protected void processData(String serialData)
+    {
         serialData = trim(serialData);
         if (serialData != null && !serialData.equals("")) {
             dataProcessor.processData(serialData);
             redraw();
         }
-
-        arduino.clear();
     }
-
 
     public Graph getGraph() {
         return this.graph;
