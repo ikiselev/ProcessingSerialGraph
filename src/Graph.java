@@ -79,6 +79,10 @@ public class Graph {
             {
                 leftIndex = 0;
             }
+
+
+            mainWindow.text(graphData.COLUMN_DATA[val_num][graphData.COLUMN_DATA[val_num].length - 1], 220, graphBottom + 20);
+
             mainWindow.beginShape();
             for(int i = graphData.COLUMN_DATA[val_num].length - 1; i > leftIndex; i--)
             {
@@ -91,11 +95,12 @@ public class Graph {
 
                 if(showAllGraphsOnOneAxis)
                 {
-                    ypos = PApplet.map(graphData.COLUMN_DATA[val_num][i], graphData.MIN_VALUES[val_num], graphData.MAX_VALUES[val_num], 0, mainWindow.height);
+                    ypos = mainWindow.height - PApplet.map(graphData.COLUMN_DATA[val_num][i], graphData.MIN_VALUES[val_num], graphData.MAX_VALUES[val_num], 0, mainWindow.height);
                 }
                 else
                 {
-                    ypos = PApplet.map(graphData.COLUMN_DATA[val_num][i], graphData.MIN_VALUES[val_num], graphData.MAX_VALUES[val_num], 0, mainWindow.height/graphData.COLUMN_DATA.length);
+                    float max = mainWindow.height/graphData.COLUMN_DATA.length;
+                    ypos = max - PApplet.map(graphData.COLUMN_DATA[val_num][i], graphData.MIN_VALUES[val_num], graphData.MAX_VALUES[val_num], 0, max);
                     ypos = ypos + graphBottom;
                 }
 
