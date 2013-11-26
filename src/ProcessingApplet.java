@@ -17,7 +17,7 @@ abstract public class ProcessingApplet extends PApplet
 
     public void setup()
     {
-        size(windowWidth, windowHeight);
+        size(windowWidth, windowHeight, this.getRenderer());
 
         dataProcessor = new DataProcessor(getDataProcessorWidth());
 
@@ -56,6 +56,10 @@ abstract public class ProcessingApplet extends PApplet
 
     abstract void processData(String serialData);
 
+    public String getRenderer()
+    {
+        return P2D;
+    }
 
     public int getDataProcessorWidth() {
         return dataProcessorWidth;
