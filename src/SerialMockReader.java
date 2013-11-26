@@ -23,7 +23,7 @@ public class SerialMockReader implements Runnable
             this.reader = new BufferedReader( new FileReader(filename));
         } catch ( IOException e)
         {
-            System.out.println("File read error");
+            System.out.println("File read error: " + e.getMessage());
         }
 
         try {
@@ -43,6 +43,10 @@ public class SerialMockReader implements Runnable
         boolean deltaMillisCalc = false;
         int lastMillis = 0;
 
+        if(reader == null)
+        {
+            return ;
+        }
 
         String line;
         try {
