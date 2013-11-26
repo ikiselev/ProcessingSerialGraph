@@ -1,7 +1,8 @@
 package Preprocessors;
 
 
-public class RecursiveFilter implements PreprocessorI {
+public class RecursiveFilter extends PreprocessorAbstract
+{
 
     float[] periodicalData;
     float[] summ;

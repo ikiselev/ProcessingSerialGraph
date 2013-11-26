@@ -1,3 +1,4 @@
+import Preprocessors.PreprocessorAbstract;
 import Preprocessors.PreprocessorI;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class DataProcessor {
 
     GraphData graphData;
 
-    ArrayList<PreprocessorI> preprocessors = new ArrayList<PreprocessorI>();
+    ArrayList<PreprocessorAbstract> preprocessors = new ArrayList<PreprocessorAbstract>();
 
     public DataProcessor(int width) {
         this.graphData = new GraphData();
@@ -77,7 +78,7 @@ public class DataProcessor {
     {
         if(preprocessors.size() == 1) //Supports only one preprocessor now..
         {
-            for(PreprocessorI Preprocessor: preprocessors)
+            for(PreprocessorAbstract Preprocessor: preprocessors)
             {
                 /**
                  * Записываем результат, если только разрешает allowShiftData,
@@ -144,7 +145,7 @@ public class DataProcessor {
         System.out.println(serialData);
 
         serialData = serialData.substring(startColumnsIndex + 1);
-        this.graphData.COLUMN_NAMES = serialData.split(",");
+        this.graphData.COLUMN_NAMES = this.getColumnNames(serialData);
 
         //Init min and max array length
         graphData.MIN_VALUES = new int[this.graphData.COLUMN_NAMES.length];
@@ -198,7 +199,26 @@ public class DataProcessor {
         return true;
     }
 
-    void addPreprocessor(PreprocessorI preprocessor)
+    public String[] getColumnNames(String serialData)
+    {
+        String[] result;
+
+        //TODO: maybe make only one possible preprocessor available instead of list?
+        if(preprocessors.size() == 1) //Supports only one preprocessor now..
+        {
+            for(PreprocessorAbstract Preprocessor: preprocessors)
+            {
+
+                return Preprocessor.getColumnNames(serialData);
+            }
+        }
+
+        result = serialData.split(",");
+
+        return result;
+    }
+
+    void addPreprocessor(PreprocessorAbstract preprocessor)
     {
 
         preprocessors.add(preprocessor);

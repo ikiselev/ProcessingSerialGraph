@@ -1,7 +1,7 @@
 package Preprocessors;
 
 
-public class GyroDegreesPerSecond implements PreprocessorI
+public class GyroDegreesPerSecond extends PreprocessorAbstract
 {
     int X = 0;
     int Y = 1;
