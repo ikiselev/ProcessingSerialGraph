@@ -1,3 +1,4 @@
+import Preprocessors.AccelerometerToSI;
 import Preprocessors.RecursiveFilter;
 import processing.core.PApplet;
 
@@ -15,7 +16,7 @@ public class ProcessingSerialGraph extends ProcessingApplet {
 
         graph = new Graph(this, windowWidth);
 
-        //dataProcessor.addPreprocessor(new RecursiveFilter());
+        dataProcessor.addPreprocessor(new AccelerometerToSI());
 
         noLoop();
     }
