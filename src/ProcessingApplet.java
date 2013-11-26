@@ -58,7 +58,7 @@ abstract public class ProcessingApplet extends PApplet
 
     public String getRenderer()
     {
-        return P2D;
+        return JAVA2D;
     }
 
     public int getDataProcessorWidth() {
