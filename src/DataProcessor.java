@@ -76,25 +76,38 @@ public class DataProcessor {
 
     void processValues(float[] incomingValues, int millisBetweenPack)
     {
-        if(preprocessors.size() == 1) //Supports only one preprocessor now..
+        if(!preprocessors.isEmpty())
         {
-            for(PreprocessorAbstract Preprocessor: preprocessors)
-            {
-                /**
-                 * Записываем результат, если только разрешает allowShiftData,
-                 * т.к. препроцессору может потребоваться несколько пачек данных
-                 */
-                float[] result = Preprocessor.processValues(incomingValues, millisBetweenPack);
-                if(Preprocessor.allowShiftData())
-                {
-                    addData(result);
-                }
-            }
+            int preprocessorNum = 0;
+            preprocessorChain(incomingValues, millisBetweenPack, preprocessorNum);
         }
         else
         {
             addData(incomingValues);
         }
+    }
+
+    public void preprocessorChain(float[] incomingValues, int millisBetweenPack, int preprocessorNum)
+    {
+        PreprocessorAbstract Preprocessor = preprocessors.get(preprocessorNum);
+        preprocessorNum++;
+        /**
+         * Записываем результат, если только разрешает allowShiftData,
+         * т.к. препроцессору может потребоваться несколько пачек данных
+         */
+        float[] result = Preprocessor.processValues(incomingValues, millisBetweenPack);
+        if(Preprocessor.allowShiftData())
+        {
+            if(preprocessorNum == preprocessors.size())
+            {
+                addData(result);
+            }
+            else
+            {
+                preprocessorChain(result, millisBetweenPack, preprocessorNum);
+            }
+        }
+
     }
 
     void addData(float[] processedValues)
@@ -204,13 +217,11 @@ public class DataProcessor {
         String[] result;
 
         //TODO: maybe make only one possible preprocessor available instead of list?
-        if(preprocessors.size() == 1) //Supports only one preprocessor now..
+        if(!preprocessors.isEmpty()) //Supports only one preprocessor now..
         {
-            for(PreprocessorAbstract Preprocessor: preprocessors)
-            {
 
-                return Preprocessor.getColumnNames(serialData);
-            }
+
+            return preprocessors.get(preprocessors.size()-1).getColumnNames(serialData);
         }
 
         result = serialData.split(",");
