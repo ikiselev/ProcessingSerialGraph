@@ -15,6 +15,9 @@ public class IMUTracker extends ProcessingApplet
     float gyroAngleY;
     float gyroAngleZ;
 
+    float accAngleX;
+    float accAngleY;
+
     static public void main(String args[]) {
         PApplet.main(new String[]{"IMUTracker"});
     }
@@ -34,7 +37,9 @@ public class IMUTracker extends ProcessingApplet
 
         textOffest = 0;
         drawBarText("X axis", gyroAngleX);
+        drawBarText("   X Acc axis", accAngleX * RAD_TO_DEG);
         drawBarText("Y axis", gyroAngleY);
+        drawBarText("   Y Acc axis", accAngleY );
         drawBarText("Z axis", gyroAngleZ);
 
         pushMatrix();
@@ -60,8 +65,8 @@ public class IMUTracker extends ProcessingApplet
         DecimalFormat df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.HALF_UP);
         df.setMinimumFractionDigits(2);
-        text(text + ": " + df.format(angle), 100 + textOffest, 20);
-        textOffest += 200;
+        text(text + ": " + df.format(angle), 10, 20 + textOffest);
+        textOffest += 25;
     }
 
     public void mouseClicked() {
@@ -79,7 +84,10 @@ public class IMUTracker extends ProcessingApplet
 
         gyroAngleX -= dataProcessor.graphData.COLUMN_DATA[0][getDataProcessorWidth() - 1];
         gyroAngleY -= dataProcessor.graphData.COLUMN_DATA[1][getDataProcessorWidth() - 1];
-        gyroAngleZ += dataProcessor.graphData.COLUMN_DATA[2][getDataProcessorWidth() - 1];
+        gyroAngleZ -= dataProcessor.graphData.COLUMN_DATA[2][getDataProcessorWidth() - 1];
+
+        accAngleX = dataProcessor.graphData.COLUMN_DATA[3][getDataProcessorWidth() - 1];
+        accAngleY = dataProcessor.graphData.COLUMN_DATA[4][getDataProcessorWidth() - 1];
     }
 
     public String getRenderer()
