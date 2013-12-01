@@ -14,6 +14,8 @@ public class DataProcessor {
     boolean deltaMillisCalc = false;
     int lastMillis = 0;
 
+    boolean accumulateMillisBetweenPack = true;
+
     GraphData graphData;
 
     ArrayList<PreprocessorAbstract> preprocessors = new ArrayList<PreprocessorAbstract>();
@@ -41,10 +43,24 @@ public class DataProcessor {
                 lastMillis = arduinoMillis;
             }
             int diff = arduinoMillis - lastMillis;
-            /**
-             * Чтобы не потерять время, если не была вызвана shiftData в препроцессорах
-             */
-            graphData.MILLIS_BETWEEN_PACK[width - 1] += diff;
+
+            if(accumulateMillisBetweenPack)
+            {
+                /**
+                 * Чтобы не потерять время, если не была вызвана shiftData в препроцессорах
+                 * Используется в тех препроцессорах, которые выдают одно значение на много пакетов с МК
+                 */
+                graphData.MILLIS_BETWEEN_PACK[width - 1] += diff;
+            }
+            else
+            {
+                /**
+                 * Для тех прероцессоров, для которых не нужно это значение
+                 * В основном: один пакет с МК - одно значение на выход.
+                 * Но, также может аккумулировать несколько значений для расчета средней ошибки
+                 */
+                graphData.MILLIS_BETWEEN_PACK[width - 1] = diff;
+            }
 
             graphData.elapsedTime += diff;
             graphData.timingOffset += diff;
@@ -235,4 +251,7 @@ public class DataProcessor {
         preprocessors.add(preprocessor);
     }
 
+    public void setAccumulateMillisBetweenPack(boolean accumulateMillisBetweenPack) {
+        this.accumulateMillisBetweenPack = accumulateMillisBetweenPack;
+    }
 }
