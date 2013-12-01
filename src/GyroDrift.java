@@ -40,16 +40,20 @@ public class GyroDrift extends ProcessingApplet
         text("Frames: " + frameCount, 20, 20);
         text("Packets: " + packets, 20, 50);
 
-        text("FPS: " + frameRate, 220, 20);
+        text("FPS: " + getFormatedFloat(frameRate), 220, 20);
         int lastIndex = (index - 1 < 0) ? maxIndex - 1 : index - 1;
         text("PPS: " + packetsPerSeconds[lastIndex], 220, 50);
+
+        text("Self-calibration:", 400, 20);
 
         if(!dataProcessor.graphData.columnNamesInited)
         {
             return;
         }
 
-
+        text("X: " + getFormatedFloat(dataProcessor.graphData.COLUMN_DATA[3][getDataProcessorWidth() - 1]), 400, 40);
+        text("Y: " + getFormatedFloat(dataProcessor.graphData.COLUMN_DATA[4][getDataProcessorWidth() - 1]), 400, 60);
+        text("Z: " + getFormatedFloat(dataProcessor.graphData.COLUMN_DATA[5][getDataProcessorWidth() - 1]), 400, 80);
 
         translate(windowWidth / 3 - 200, height / 2);
         drawBarText("X axis", gyroAngleX);
@@ -80,11 +84,15 @@ public class GyroDrift extends ProcessingApplet
 
     public void drawBarText(String text, float angle)
     {
+        text(text + ": " + getFormatedFloat(angle), -BarLength / 2, -BarLength / 2);
+    }
+
+    public String getFormatedFloat(float value)
+    {
         DecimalFormat df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.HALF_UP);
         df.setMinimumFractionDigits(2);
-        text(text + ": " + df.format(angle), -BarLength / 2, -BarLength / 2);
-
+        return df.format(value);
     }
 
 
