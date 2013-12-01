@@ -1,40 +1,62 @@
 package Preprocessors;
 
-
-public class AccelerometerToSI extends PreprocessorAbstract
+/**
+ * Препроцессор показывает значения с акселерометра и гироскопа в человекопонятных измерениях.
+ *
+ * Гироскоп: градусы в секунду (в СИ: радианы в сек)
+ * Акселерометр: метры в секунду в квадрате
+ */
+public class AccelerometerToSI extends CalibratedPreprocessorAbstract
 {
 
-    float zeroX = 67.8f;
-    float zeroY = 131.8f;
-    float zeroZ = -1007.0f;
+    /**
+     * Values from gyroscope datasheet
+     */
+    int gyroSensevity = 250; //dps
+    float gyroDpsPerDigit = 0.00875f;
+
+    int accRange = 2; //g
+    float accGPerDigit = 0.001f; // 1 mg/digit
+
+    float gravityAcceleration = 9.8f;
+    int graphRange = (int)Math.ceil(accRange * gravityAcceleration);
+
 
     @Override
     public float[] processValues(float[] incomingValues, int millisBetweenPack) {
-        float[] result = new float[3];
+        if(!this.preCalibrate(incomingValues))
+        {
+            return null;
+        }
 
+        float[] result = new float[6];
 
-        result[0] = incomingValues[3] - zeroX ;//* 0.001f;
-        result[1] = incomingValues[4] - zeroY ;//* 0.001f;
-        result[2] = incomingValues[5] - zeroZ ;//* 0.001f;
-
+        result[0] = ((incomingValues[0] - errorMiddleValue[0]) * gyroDpsPerDigit);
+        result[1] = ((incomingValues[1] - errorMiddleValue[1]) * gyroDpsPerDigit);
+        result[2] = ((incomingValues[2] - errorMiddleValue[2]) * gyroDpsPerDigit);
+        result[3] = incomingValues[3] * accGPerDigit * gravityAcceleration;
+        result[4] = incomingValues[4] * accGPerDigit * gravityAcceleration;
+        result[5] = incomingValues[5] * accGPerDigit * gravityAcceleration;
 
         return result;
     }
+
 
     @Override
     public String[] getColumnNames(String serialData)
     {
-        String[] result = new String[3];
+        String[] result = new String[6];
 
-        result[0] = "X{-250;250}";
-        result[1] = "Y{-250;250}";
-        result[2] = "Z{-250;250}";
+        //Gyro
+        result[0] = "X deg/s{-" + gyroSensevity + ";" + gyroSensevity + "}";
+        result[1] = "Y deg/s{-" + gyroSensevity + ";" + gyroSensevity + "}";
+        result[2] = "Z deg/s{-" + gyroSensevity + ";" + gyroSensevity + "}";
+
+        //Accel
+        result[3] = "X m/s2{-" + graphRange + ";" + graphRange + "}";
+        result[4] = "Y m/s2{-" + graphRange + ";" + graphRange + "}";
+        result[5] = "Z m/s2{-" + graphRange + ";" + graphRange + "}";
 
         return result;
-    }
-
-    @Override
-    public boolean allowShiftData() {
-        return true;
     }
 }
