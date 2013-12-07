@@ -1,6 +1,8 @@
 import Preprocessors.AccelerometerToSI;
 import Preprocessors.RecursiveFilter;
 import processing.core.PApplet;
+import sys.Graph;
+import sys.ProcessingApplet;
 
 public class ProcessingSerialGraph extends ProcessingApplet {
 
@@ -10,10 +12,8 @@ public class ProcessingSerialGraph extends ProcessingApplet {
         PApplet.main(new String[]{"ProcessingSerialGraph"});
     }
 
-    public void setup()
+    public void userSetup()
     {
-        super.setup();
-
         graph = new Graph(this, windowWidth);
 
         dataProcessor.addPreprocessor(new RecursiveFilter());
@@ -30,7 +30,7 @@ public class ProcessingSerialGraph extends ProcessingApplet {
 
 
 
-    protected void processData(String serialData)
+    public void processData(String serialData)
     {
         serialData = trim(serialData);
         if (serialData != null && !serialData.equals("")) {

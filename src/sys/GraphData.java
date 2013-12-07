@@ -1,9 +1,11 @@
+package sys;
+
 public class GraphData
 {
     public boolean columnNamesInited = false;
 
-    String[] COLUMN_NAMES;
-    float[][] COLUMN_DATA;
+    public String[] COLUMN_NAMES;
+    public float[][] COLUMN_DATA;
 
     /**
      * How many array values in COLUMN_DATA is not empty.

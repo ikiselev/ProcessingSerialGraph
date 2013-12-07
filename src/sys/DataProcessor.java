@@ -1,5 +1,6 @@
+package sys;
+
 import Preprocessors.PreprocessorAbstract;
-import Preprocessors.PreprocessorI;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class DataProcessor {
 
     boolean accumulateMillisBetweenPack = true;
 
-    GraphData graphData;
+    public GraphData graphData;
 
     ArrayList<PreprocessorAbstract> preprocessors = new ArrayList<PreprocessorAbstract>();
 
@@ -90,7 +91,7 @@ public class DataProcessor {
         processValues(values, graphData.MILLIS_BETWEEN_PACK[width - 1]);
     }
 
-    void processValues(float[] incomingValues, int millisBetweenPack)
+    protected void processValues(float[] incomingValues, int millisBetweenPack)
     {
         if(!preprocessors.isEmpty())
         {
@@ -126,7 +127,7 @@ public class DataProcessor {
 
     }
 
-    void addData(float[] processedValues)
+    protected void addData(float[] processedValues)
     {
         shiftData();
 
@@ -245,7 +246,7 @@ public class DataProcessor {
         return result;
     }
 
-    void addPreprocessor(PreprocessorAbstract preprocessor)
+    public void addPreprocessor(PreprocessorAbstract preprocessor)
     {
 
         preprocessors.add(preprocessor);

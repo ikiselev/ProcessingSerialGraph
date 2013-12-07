@@ -1,5 +1,6 @@
 import Preprocessors.GyroDegreesPerSecond;
 import processing.core.PApplet;
+import sys.ProcessingApplet;
 
 public class GyroDrift extends ProcessingApplet
 {

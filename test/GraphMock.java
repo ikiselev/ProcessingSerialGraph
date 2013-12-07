@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import sys.Graph;
 
 import java.util.ArrayList;
 

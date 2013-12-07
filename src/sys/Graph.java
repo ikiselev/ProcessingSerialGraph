@@ -1,3 +1,5 @@
+package sys;
+
 import processing.core.PApplet;
 
 /**
@@ -24,7 +26,7 @@ public class Graph {
 
     int width;
 
-    PApplet mainWindow;
+    public PApplet mainWindow;
 
     public Graph(PApplet mainWindow, int width) {
         this.mainWindow = mainWindow;

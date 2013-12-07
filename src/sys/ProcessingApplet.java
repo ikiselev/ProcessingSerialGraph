@@ -1,3 +1,5 @@
+package sys;
+
 import processing.core.PApplet;
 import processing.serial.Serial;
 
@@ -7,8 +9,8 @@ import java.text.DecimalFormat;
 abstract public class ProcessingApplet extends PApplet
 {
 
-    int windowWidth = 1200;
-    int windowHeight = 700;
+    public int windowWidth = 1200;
+    public int windowHeight = 700;
 
     int dataProcessorWidth = windowWidth;
 
@@ -17,7 +19,7 @@ abstract public class ProcessingApplet extends PApplet
     //String filename = "C:\\Users\\ikiselev\\Dropbox\\Arduino\\Шипиловская-Борисово. 25.11.13.txt";
     String filename = null;
 
-    DataProcessor dataProcessor;
+    public DataProcessor dataProcessor;
 
 
 
@@ -78,7 +80,7 @@ abstract public class ProcessingApplet extends PApplet
         this.processData(line);
     }
 
-    abstract void processData(String serialData);
+    abstract public void processData(String serialData);
 
     public String getRenderer()
     {
