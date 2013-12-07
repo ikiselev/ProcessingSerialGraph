@@ -1,6 +1,6 @@
 import Preprocessors.P3DPreprocessor;
-import Preprocessors.RecursiveFilter;
 import processing.core.PApplet;
+import sys.ProcessingApplet;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;

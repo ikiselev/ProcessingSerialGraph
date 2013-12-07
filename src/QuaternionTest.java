@@ -1,5 +1,6 @@
 import Preprocessors.QuaternionPreprocessor;
 import processing.core.PApplet;
+import sys.ProcessingApplet;
 
 
 public class QuaternionTest extends ProcessingApplet {
@@ -44,7 +45,7 @@ public class QuaternionTest extends ProcessingApplet {
     }
 
     @Override
-    void processData(String serialData) {
+    public void processData(String serialData) {
         serialData = trim(serialData);
         if (serialData != null && !serialData.equals("")) {
             dataProcessor.processData(serialData);
