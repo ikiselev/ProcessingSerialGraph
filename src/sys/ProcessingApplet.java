@@ -1,5 +1,6 @@
 package sys;
 
+import Preprocessors.PreprocessorAbstract;
 import processing.core.PApplet;
 import processing.serial.Serial;
 
@@ -11,6 +12,8 @@ abstract public class ProcessingApplet extends PApplet
 
     public int windowWidth = 1200;
     public int windowHeight = 700;
+
+    public AppProperties appSettings = new AppProperties(this.getClass().getSimpleName());
 
     int dataProcessorWidth = windowWidth;
 
@@ -31,6 +34,23 @@ abstract public class ProcessingApplet extends PApplet
         size(windowWidth, windowHeight, this.getRenderer());
 
         dataProcessor = new DataProcessor(getDataProcessorWidth());
+
+        String[] Preprocessors = appSettings.getClassProperties(AppProperties.PREPROCESSORS);
+        for (String preprocessor : Preprocessors)
+        {
+            try
+            {
+                Class cl = Class.forName("Preprocessors." + preprocessor);
+                dataProcessor.addPreprocessor((PreprocessorAbstract)cl.newInstance());
+            }
+            catch(ClassNotFoundException | InstantiationException | IllegalAccessException e)
+            {
+                System.out.println("Properties: " + e.getMessage());
+            }
+        }
+
+        boolean accumulateMillisBetweenPack = appSettings.getClassPropertyBoolean(AppProperties.ACCUMULATE_MILLIS_BETWEEN_PACK);
+        dataProcessor.setAccumulateMillisBetweenPack(accumulateMillisBetweenPack);
 
         userSetup();
 

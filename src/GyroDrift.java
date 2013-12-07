@@ -23,16 +23,6 @@ public class GyroDrift extends ProcessingApplet
         PApplet.main(new String[]{"GyroDrift"});
     }
 
-    public void setup()
-    {
-        super.setup();
-        dataProcessor.addPreprocessor(new GyroDegreesPerSecond());
-        /**
-         * Avoid millis between pack be too large after allow shift data in preCalibration
-         */
-        dataProcessor.setAccumulateMillisBetweenPack(false);
-    }
-
     public void draw()
     {
         background(0xff000000);
