@@ -1,9 +1,6 @@
 import Preprocessors.GyroDegreesPerSecond;
 import processing.core.PApplet;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-
 public class GyroDrift extends ProcessingApplet
 {
     int dataProcessorWidth = 2;
@@ -89,14 +86,6 @@ public class GyroDrift extends ProcessingApplet
     public void drawBarText(String text, float angle)
     {
         text(text + ": " + getFormatedFloat(angle), -BarLength / 2, -BarLength / 2);
-    }
-
-    public String getFormatedFloat(float value)
-    {
-        DecimalFormat df = new DecimalFormat("#.##");
-        df.setRoundingMode(RoundingMode.HALF_UP);
-        df.setMinimumFractionDigits(2);
-        return df.format(value);
     }
 
 

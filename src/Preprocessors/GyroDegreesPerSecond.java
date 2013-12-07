@@ -23,6 +23,7 @@ public class GyroDegreesPerSecond extends CalibratedPreprocessorAbstract
 
         float[] result = new float[6];
 
+        // / 14.375f for quadcopter
         Gyro[X] = (incomingValues[0] - errorMiddleValue[0]) * 0.00875f;
         Gyro[Y] = (incomingValues[1] - errorMiddleValue[1]) * 0.00875f;
         Gyro[Z] = (incomingValues[2] - errorMiddleValue[2]) * 0.00875f;

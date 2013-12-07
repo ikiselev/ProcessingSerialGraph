@@ -8,10 +8,10 @@ public class TR_IMUFilter
 
     float sampleFreq; // half the sample period expressed in seconds
 
-    float q0 = 1.0f;
-    float q1 = 0.0f;
-    float q2 = 0.0f;
-    float q3 = 0.0f;
+    public float q0 = 1.0f;
+    public float q1 = 0.0f;
+    public float q2 = 0.0f;
+    public float q3 = 0.0f;
 
 
     float twoKp = 2.0f * 2.0f;

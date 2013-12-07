@@ -1,6 +1,9 @@
 import processing.core.PApplet;
 import processing.serial.Serial;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 abstract public class ProcessingApplet extends PApplet
 {
 
@@ -10,7 +13,9 @@ abstract public class ProcessingApplet extends PApplet
     int dataProcessorWidth = windowWidth;
 
     Serial arduino;
-    String filename = "SerialMockFile.txt";
+    //String filename = "C:\\Users\\Alabay\\Dropbox\\Arduino\\Шипиловская-Борисово. 25.11.13.txt";
+    //String filename = "C:\\Users\\ikiselev\\Dropbox\\Arduino\\Шипиловская-Борисово. 25.11.13.txt";
+    String filename = null;
 
     DataProcessor dataProcessor;
 
@@ -31,6 +36,7 @@ abstract public class ProcessingApplet extends PApplet
         if(filename != null)
         {
             SerialMockReader serialMockReader = new SerialMockReader(this, filename);
+            System.out.println("Using " + filename);
             serialMockReader.start();
         }
         else
@@ -39,6 +45,13 @@ abstract public class ProcessingApplet extends PApplet
         }
     }
 
+    public String getFormatedFloat(float value)
+    {
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        df.setMinimumFractionDigits(2);
+        return df.format(value);
+    }
 
     public void serialEvent (Serial arduino)
     {
