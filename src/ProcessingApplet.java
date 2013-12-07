@@ -20,15 +20,26 @@ abstract public class ProcessingApplet extends PApplet
     DataProcessor dataProcessor;
 
 
+
+    /**
+     * initDataProvider - Если файл, то super.setup должен вызываться после добавления препроцессоров
+     */
     public void setup()
     {
         size(windowWidth, windowHeight, this.getRenderer());
 
         dataProcessor = new DataProcessor(getDataProcessorWidth());
 
+        userSetup();
+
         initDataProvider();
 
         smooth();
+    }
+
+    public void userSetup()
+    {
+
     }
 
     public void initDataProvider()
