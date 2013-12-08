@@ -14,14 +14,6 @@ public class QuaternionTest extends ProcessingApplet {
     }
 
 
-
-    public void setup() {
-        super.setup();
-        dataProcessor.addPreprocessor(new QuaternionPreprocessor());
-        dataProcessor.setAccumulateMillisBetweenPack(false);
-        smooth();
-    }
-
     public void draw()
     {
         if(!dataProcessor.graphData.columnNamesInited)

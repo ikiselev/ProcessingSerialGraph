@@ -34,7 +34,7 @@ public class AppProperties
     public boolean getClassPropertyBoolean(String key)
     {
         String data = appSettings.getProperty(getClassKey(key));
-        return data.equals("true");
+        return (data != null && data.equals("true"));
     }
 
     public String getClassProperty(String key) {

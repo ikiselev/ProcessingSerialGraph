@@ -24,12 +24,6 @@ public class IMUTracker extends ProcessingApplet
         PApplet.main(new String[]{"IMUTracker"});
     }
 
-    public void setup()
-    {
-        super.setup();
-        dataProcessor.addPreprocessor(new P3DPreprocessor());
-    }
-
     public void draw()
     {
         background(0xff000000);

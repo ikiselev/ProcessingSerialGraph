@@ -40,12 +40,12 @@ abstract public class ProcessingApplet extends PApplet
         {
             try
             {
-                Class cl = Class.forName("Preprocessors." + preprocessor);
+                Class cl = Class.forName("Preprocessors." + preprocessor.trim());
                 dataProcessor.addPreprocessor((PreprocessorAbstract)cl.newInstance());
             }
             catch(ClassNotFoundException | InstantiationException | IllegalAccessException e)
             {
-                System.out.println("Properties: " + e.getMessage());
+                System.out.println("Properties error: " + e.getMessage());
             }
         }
 
