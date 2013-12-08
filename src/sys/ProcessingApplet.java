@@ -18,9 +18,7 @@ abstract public class ProcessingApplet extends PApplet
     int dataProcessorWidth = windowWidth;
 
     Serial arduino;
-    //String filename = "C:\\Users\\Alabay\\Dropbox\\Arduino\\Шипиловская-Борисово. 25.11.13.txt";
-    //String filename = "C:\\Users\\ikiselev\\Dropbox\\Arduino\\Шипиловская-Борисово. 25.11.13.txt";
-    String filename = null;
+    String filename = appSettings.getProperty("SerialMockReader.filename");
 
     public DataProcessor dataProcessor;
 

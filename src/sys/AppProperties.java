@@ -1,9 +1,7 @@
 package sys;
 
+import java.io.*;
 import java.util.Properties;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class AppProperties
 {
@@ -19,7 +17,9 @@ public class AppProperties
         try
         {
             appSettings = new java.util.Properties();
-            appSettings.load(new FileInputStream(System.getProperty("user.dir") + "/app.cfg"));
+            InputStream stream = new FileInputStream(System.getProperty("user.dir") + "/app.cfg");
+            InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+            appSettings.load(reader);
         }
         catch (FileNotFoundException e)
         {
@@ -29,6 +29,11 @@ public class AppProperties
         {
             System.out.println("Config file IOException: " + e.getMessage());
         }
+    }
+
+    public String getProperty(String key)
+    {
+        return appSettings.getProperty(key);
     }
 
     public boolean getClassPropertyBoolean(String key)
@@ -46,7 +51,7 @@ public class AppProperties
         return appSettings.getProperty(getClassKey(key)).split(",");
     }
 
-    protected String getClassKey(String key)
+    private String getClassKey(String key)
     {
         return className + "." + key;
     }

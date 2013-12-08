@@ -1,5 +1,3 @@
-import Preprocessors.AccelerometerToSI;
-import Preprocessors.RecursiveFilter;
 import processing.core.PApplet;
 import sys.Graph;
 import sys.ProcessingApplet;
