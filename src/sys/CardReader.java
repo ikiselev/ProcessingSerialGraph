@@ -57,7 +57,7 @@ public class CardReader extends MockReader
                     break;
                 }
                 String[] messages = bufString.split(END_DELIMITER);
-                boolean lastMessageInBufferIsFull = bufString.endsWith(UNIQUE_DELIMITER);
+                boolean lastMessageInBufferIsFull = bufString.endsWith(END_DELIMITER);
 
                 for(int i=0; i < messages.length; i++)
                 {
@@ -91,6 +91,7 @@ public class CardReader extends MockReader
                                     //TODO: Error!
                                     System.out.println("END?!");
                                     validData = false;
+                                    break;
                                 }
                             }
 
