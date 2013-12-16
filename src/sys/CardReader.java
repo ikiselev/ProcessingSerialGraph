@@ -5,7 +5,7 @@ import processing.core.PApplet;
 import java.io.*;
 import java.lang.reflect.Method;
 
-public class CardReader implements Runnable
+public class CardReader extends MockReader
 {
     PApplet parent;
     String filename;
@@ -27,14 +27,15 @@ public class CardReader implements Runnable
 
     private final Thread t;
 
+
+
     public CardReader(PApplet parent, String filename)
     {
-        this.parent = parent;
-        this.filename = filename;
+        super(parent, filename);
 
         try
         {
-            File diskRoot = new File ("\\\\.\\PHYSICALDRIVE3");
+            File diskRoot = new File(this.getFilename());
             RandomAccessFile diskAccess = new RandomAccessFile (diskRoot, "r");
             byte[] content = new byte[SECTOR_SIZE];
 

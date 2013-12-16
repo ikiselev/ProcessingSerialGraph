@@ -5,45 +5,26 @@ import processing.core.PApplet;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Method;
 
-public class SerialMockReader implements Runnable
+public class SerialMockReader extends MockReader
 {
-    PApplet parent;
-    String filename;
-    BufferedReader reader;
-    Method serialEventMethod;
-
-    private final Thread t;
-
-    public SerialMockReader(PApplet parent, String filename)  {
-        this.parent = parent;
-        this.filename = filename;
-
-        try
-        {
-            this.reader = new BufferedReader( new FileReader(filename));
-        } catch ( IOException e)
-        {
-            System.out.println("File read error: " + e.getMessage());
-        }
-
-        try {
-            serialEventMethod = parent.getClass().getMethod("fileEvent", new Class[] { String.class });
-        } catch (Exception e) {
-            // no such method, or an error.. which is fine, just ignore
-        }
-
-        t = new Thread(this, "File Data Thread");
-    }
-
-    public void start() {
-        t.start();
+    public SerialMockReader(PApplet parent, String filename) {
+        super(parent, filename);
     }
 
     public void run() {
         boolean deltaMillisCalc = false;
         int lastMillis = 0;
+
+        BufferedReader reader = null;
+
+        try
+        {
+            reader = new BufferedReader( new FileReader(this.getFilename()));
+        } catch ( IOException e)
+        {
+            System.out.println("File read error: " + e.getMessage());
+        }
 
         if(reader == null)
         {

@@ -4,6 +4,8 @@ import Preprocessors.PreprocessorAbstract;
 import processing.core.PApplet;
 import processing.serial.Serial;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
@@ -18,7 +20,6 @@ abstract public class ProcessingApplet extends PApplet
     int dataProcessorWidth = windowWidth;
 
     Serial arduino;
-    String filename = appSettings.getProperty("SerialMockReader.filename");
 
     public DataProcessor dataProcessor;
 
@@ -64,11 +65,37 @@ abstract public class ProcessingApplet extends PApplet
 
     public void initDataProvider()
     {
+        String readerClass = appSettings.getProperty("MockReaderClass".trim());
+        String filename = appSettings.getProperty(readerClass + ".filename");
+
+
         if(filename != null)
         {
-            SerialMockReader serialMockReader = new SerialMockReader(this, filename);
-            System.out.println("Using " + filename);
-            serialMockReader.start();
+            //TODO: strange try-catch behaivor in java 7...
+            try
+            {
+                Class cl = Class.forName("sys." + readerClass);
+                try
+                {
+                    Constructor c = cl.getConstructor(new Class[]{PApplet.class, String.class});
+                    MockReader serialMockReader = (MockReader)c.newInstance(this, filename);
+
+                    System.out.println("Using " + readerClass + " with target " + filename);
+                    serialMockReader.start();
+
+                } catch (NoSuchMethodException e)
+                {
+                    System.out.println(e.getMessage());
+                }
+                catch(InvocationTargetException e)
+                {
+                    System.out.println(e.getMessage());
+                }
+            }
+            catch(ClassNotFoundException | InstantiationException | IllegalAccessException e)
+            {
+                System.out.println("Properties error: " + e.getMessage());
+            }
         }
         else
         {
