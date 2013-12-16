@@ -7,13 +7,12 @@ import java.lang.reflect.Method;
 
 public class CardReader extends MockReader
 {
-    PApplet parent;
     String filename;
-    BufferedReader reader;
     Method serialEventMethod;
 
     String UNIQUE_DELIMITER = "\\$\\$";
     String END_DELIMITER = "\n";
+    String COLUMNS_HEADER = "Columns:";
 
 
     int SECTOR_SIZE = 512;
@@ -112,6 +111,8 @@ public class CardReader extends MockReader
             System.out.println("File read error: " + e.getMessage());
         }
 
+        fileContents = COLUMNS_HEADER + fileContents;
+
         try {
             serialEventMethod = parent.getClass().getMethod("fileEvent", new Class[] { String.class });
         } catch (Exception e) {
@@ -132,11 +133,6 @@ public class CardReader extends MockReader
     public void run() {
         boolean deltaMillisCalc = false;
         int lastMillis = 0;
-
-        if(reader == null)
-        {
-            return ;
-        }
 
         String[] lines = fileContents.split(END_DELIMITER);
 
