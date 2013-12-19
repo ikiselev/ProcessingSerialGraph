@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class SerialMockReader extends MockReader
 {
-    public SerialMockReader(PApplet parent, String filename) {
+    public SerialMockReader(ProcessingApplet parent, String filename) {
         super(parent, filename);
     }
 

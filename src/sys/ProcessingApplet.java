@@ -83,7 +83,7 @@ abstract public class ProcessingApplet extends PApplet
                 Class cl = Class.forName("sys." + readerClass);
                 try
                 {
-                    Constructor c = cl.getConstructor(new Class[]{PApplet.class, String.class});
+                    Constructor c = cl.getConstructor(new Class[]{ProcessingApplet.class, String.class});
                     MockReader serialMockReader = (MockReader)c.newInstance(this, filename);
 
                     System.out.println("Using " + readerClass + " with target " + filename);

@@ -17,7 +17,6 @@ public class CardReader extends MockReader
 
     int SECTOR_SIZE = 512;
     int MAX_LINE_LENGTH = 1024;
-    int startBlock = 1;
 
     int uniqueNumber;
     boolean uniqueNumberInited = false;
@@ -28,9 +27,10 @@ public class CardReader extends MockReader
 
 
 
-    public CardReader(PApplet parent, String filename)
+    public CardReader(ProcessingApplet parent, String filename)
     {
         super(parent, filename);
+        int startBlock = Integer.parseInt(parent.appSettings.getProperty("CardReader.startBlock"));
 
         try
         {

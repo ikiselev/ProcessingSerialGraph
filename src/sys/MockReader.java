@@ -15,7 +15,7 @@ abstract public class MockReader implements Runnable
 
 
 
-    public MockReader(PApplet parent, String filename)  {
+    public MockReader(ProcessingApplet parent, String filename)  {
         this.parent = parent;
         this.filename = filename;
 
