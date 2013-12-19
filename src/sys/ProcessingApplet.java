@@ -41,6 +41,7 @@ abstract public class ProcessingApplet extends PApplet
             {
                 Class cl = Class.forName("Preprocessors." + preprocessor.trim());
                 dataProcessor.addPreprocessor((PreprocessorAbstract)cl.newInstance());
+                System.out.println("Preprocessor added: " + preprocessor.trim());
             }
             catch(ClassNotFoundException | InstantiationException | IllegalAccessException e)
             {
@@ -49,6 +50,7 @@ abstract public class ProcessingApplet extends PApplet
         }
 
         boolean accumulateMillisBetweenPack = appSettings.getClassPropertyBoolean(AppProperties.ACCUMULATE_MILLIS_BETWEEN_PACK);
+        System.out.println("accumulateMillisBetweenPack: " + accumulateMillisBetweenPack);
         dataProcessor.setAccumulateMillisBetweenPack(accumulateMillisBetweenPack);
 
         userSetup();
@@ -65,9 +67,13 @@ abstract public class ProcessingApplet extends PApplet
 
     public void initDataProvider()
     {
+        String filename = null;
         String readerClass = appSettings.getProperty("MockReaderClass".trim());
-        String filename = appSettings.getProperty(readerClass + ".filename");
 
+        if(readerClass != null)
+        {
+            filename = appSettings.getProperty(readerClass + ".filename");
+        }
 
         if(filename != null)
         {

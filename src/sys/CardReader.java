@@ -90,6 +90,7 @@ public class CardReader extends MockReader
                                     //TODO: Error!
                                     System.out.println("END?!");
                                     validData = false;
+                                    fileContents = fileContents.trim();
                                     break;
                                 }
                             }
