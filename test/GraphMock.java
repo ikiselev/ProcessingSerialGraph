@@ -13,9 +13,9 @@ public class GraphMock extends Graph {
     }
 
     @Override
-    public void drawNet(int lineSeparatorEvery, int timingOffset, int elapsedTime) {
+    public void drawNet(int lineSeparatorEvery, int showGraphTime, int timingOffset, int elapsedTime) {
         SecondsLineSeparatorXPos.clear();
-        super.drawNet(lineSeparatorEvery, timingOffset, elapsedTime);
+        super.drawNet(lineSeparatorEvery, showGraphTime, timingOffset, elapsedTime);
     }
 
     @Override

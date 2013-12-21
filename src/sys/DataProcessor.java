@@ -51,7 +51,7 @@ public class DataProcessor {
                  * Чтобы не потерять время, если не была вызвана shiftData в препроцессорах
                  * Используется в тех препроцессорах, которые выдают одно значение на много пакетов с МК
                  */
-                graphData.MILLIS_BETWEEN_PACK[width - 1] += diff;
+                graphData.MILLIS_BETWEEN_PACK[0] += diff;
             }
             else
             {
@@ -60,7 +60,7 @@ public class DataProcessor {
                  * В основном: один пакет с МК - одно значение на выход.
                  * Но, также может аккумулировать несколько значений для расчета средней ошибки
                  */
-                graphData.MILLIS_BETWEEN_PACK[width - 1] = diff;
+                graphData.MILLIS_BETWEEN_PACK[0] = diff;
             }
 
             graphData.elapsedTime += diff;
@@ -88,7 +88,7 @@ public class DataProcessor {
             values[val_num] = Float.parseFloat(incomingValues[val_num]);
         }
 
-        processValues(values, graphData.MILLIS_BETWEEN_PACK[width - 1]);
+        processValues(values, graphData.MILLIS_BETWEEN_PACK[0]);
     }
 
     protected void processValues(float[] incomingValues, int millisBetweenPack)
@@ -136,24 +136,24 @@ public class DataProcessor {
          */
         for(int val_num = 0; val_num < processedValues.length; val_num++)
         {
-            this.graphData.COLUMN_DATA[val_num][width-1] = processedValues[val_num];
+            this.graphData.COLUMN_DATA[val_num][0] = processedValues[val_num];
         }
     }
 
     protected void shiftData() {
         // put all data and related timings one array back
-        for(int i = 1; i < width; i++)
+        for(int i = this.graphData.showGraphTime - 1; i > 0; i--)
         {
             for(int val_num = 0; val_num < this.graphData.COLUMN_DATA.length; val_num++)
             {
-                this.graphData.COLUMN_DATA[val_num][i-1] = this.graphData.COLUMN_DATA[val_num][i];
+                this.graphData.COLUMN_DATA[val_num][i] = this.graphData.COLUMN_DATA[val_num][i-1];
             }
 
-            graphData.MILLIS_BETWEEN_PACK[i-1] = graphData.MILLIS_BETWEEN_PACK[i];
+            graphData.MILLIS_BETWEEN_PACK[i] = graphData.MILLIS_BETWEEN_PACK[i-1];
         }
 
-        graphData.MILLIS_BETWEEN_PACK[width - 1] = 0;
-        if(graphData.valuesFilled < width)
+        graphData.MILLIS_BETWEEN_PACK[0] = 0;
+        if(graphData.valuesFilled < graphData.showGraphTime)
         {
             graphData.valuesFilled++;
         }
@@ -221,8 +221,8 @@ public class DataProcessor {
 
 
         //Making buffer
-        this.graphData.COLUMN_DATA = new float[this.graphData.COLUMN_NAMES.length][width];
-        graphData.MILLIS_BETWEEN_PACK = new int[width];
+        this.graphData.COLUMN_DATA = new float[this.graphData.COLUMN_NAMES.length][graphData.showGraphTime];
+        graphData.MILLIS_BETWEEN_PACK = new int[graphData.showGraphTime];
 
         graphData.columnNamesInited = true;
 

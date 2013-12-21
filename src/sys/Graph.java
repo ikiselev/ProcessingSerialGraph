@@ -9,9 +9,6 @@ import processing.core.PApplet;
 public class Graph {
     boolean showAllGraphsOnOneAxis = false;
 
-
-    int showGraphTime = 10000; //10sec
-
     //Graph colors
     int[] graphColors = { 0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00, 0xFF00FF, 0x00FFFF };
 
@@ -46,7 +43,7 @@ public class Graph {
             initColorsArray(graphData);
         }
 
-        this.drawNet(graphData.lineSeparatorEvery, graphData.timingOffset, graphData.elapsedTime);
+        this.drawNet(graphData.lineSeparatorEvery, graphData.showGraphTime, graphData.timingOffset, graphData.elapsedTime);
 
         // redraw each graph
         for(int val_num = 0; val_num < graphData.COLUMN_DATA.length; val_num++)
@@ -76,24 +73,14 @@ public class Graph {
             float xpos = width;
             float ypos;
 
-            int leftIndex = graphData.COLUMN_DATA[val_num].length - graphData.valuesFilled - 1;
-            if(leftIndex < 0)
-            {
-                leftIndex = 0;
-            }
-
-
-            mainWindow.text(graphData.COLUMN_DATA[val_num][graphData.COLUMN_DATA[val_num].length - 1], 220, graphBottom + 20);
+            mainWindow.text(graphData.COLUMN_DATA[val_num][0], 220, graphBottom + 20);
 
             mainWindow.beginShape();
-            for(int i = graphData.COLUMN_DATA[val_num].length - 1; i > leftIndex; i--)
+            for(int i = 0; i < graphData.valuesFilled; i++)
             {
                 //TODO: move xpos calc upper
-                if(i < width - 1)
-                {
-                    float offset = (float) width / (float) showGraphTime * (float)graphData.MILLIS_BETWEEN_PACK[i];
-                    xpos = xpos - offset;
-                }
+                float offset = (float) width / (float) graphData.showGraphTime * (float)graphData.MILLIS_BETWEEN_PACK[i];
+                xpos = xpos - offset;
 
                 if(showAllGraphsOnOneAxis)
                 {
@@ -126,9 +113,9 @@ public class Graph {
         mainWindow.strokeWeight(1);
     }
 
-    public void drawNet(int lineSeparatorEvery, int timingOffset, int elapsedTime)
+    public void drawNet(int lineSeparatorEvery, int showGraphTime, int timingOffset, int elapsedTime)
     {
-        for (int i = 0; i<=width/10; i++) {
+        for (int i = 0; i<=mainWindow.height/10; i++) {
             mainWindow.stroke(20); // gray
             mainWindow.line(0, i*10, width, i*10);
         }
