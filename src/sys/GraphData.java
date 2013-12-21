@@ -16,6 +16,9 @@ public class GraphData
     int[] MILLIS_BETWEEN_PACK;
 
     //TODO: This is not good very good that GraphData knows about these values
+    //int[][]groups = {{0,1},{2,3}};
+    int[][]groups;
+
     int showGraphTime = 10000; //10sec
     int lineSeparatorEvery = 1000; //1sec
     int timingOffset = 0;

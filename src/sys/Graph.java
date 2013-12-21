@@ -46,14 +46,22 @@ public class Graph {
         this.drawNet(graphData.lineSeparatorEvery, graphData.showGraphTime, graphData.timingOffset, graphData.elapsedTime);
 
         // redraw each graph
-        for(int val_num = 0; val_num < graphData.COLUMN_DATA.length; val_num++)
+
+        //TODO: extract methods
+        for(int group_num = 0; group_num < graphData.groups.length; group_num++)
         {
-            float graphBottom = val_num * mainWindow.height/graphData.COLUMN_DATA.length;
+        for(int group_val_num = 0; group_val_num < graphData.groups[group_num].length; group_val_num++)
+        {
+            int val_num = graphData.groups[group_num][group_val_num];
+
+
+            int textOffsetY = group_val_num * 20;
+            float graphBottom = group_num * mainWindow.height / getGraphSectionsCount(graphData);
             drawLineSeparator(graphBottom);
 
             //Draw zero axis
             int center_val = (graphData.MIN_VALUES[val_num] + graphData.MAX_VALUES[val_num]) / 2;
-            float half = PApplet.map(center_val, graphData.MIN_VALUES[val_num], graphData.MAX_VALUES[val_num], 0, mainWindow.height/graphData.COLUMN_DATA.length);
+            float half = PApplet.map(center_val, graphData.MIN_VALUES[val_num], graphData.MAX_VALUES[val_num], 0, mainWindow.height/getGraphSectionsCount(graphData));
             mainWindow.stroke(180);
             mainWindow.line(0, half + graphBottom, width, half + graphBottom);
 
@@ -62,18 +70,18 @@ public class Graph {
             mainWindow.fill(initedColorsArray[val_num]);
 
             mainWindow.textSize(12);
-            mainWindow.text(center_val, 10, half + graphBottom - 5);
+            mainWindow.text(center_val, 10, half + graphBottom - 5 + textOffsetY);
 
 
             mainWindow.textSize(18);
-            mainWindow.text(graphData.COLUMN_NAMES[val_num] + " [" + String.valueOf(graphData.MIN_VALUES[val_num]) + "; " + String.valueOf(graphData.MAX_VALUES[val_num]) + "]", 10, graphBottom + 20);
+            mainWindow.text(graphData.COLUMN_NAMES[val_num] + " [" + String.valueOf(graphData.MIN_VALUES[val_num]) + "; " + String.valueOf(graphData.MAX_VALUES[val_num]) + "]", 10, graphBottom + 20 + textOffsetY);
             mainWindow.noFill();
 
 
             float xpos = width;
             float ypos;
 
-            mainWindow.text(graphData.COLUMN_DATA[val_num][0], 220, graphBottom + 20);
+            mainWindow.text(graphData.COLUMN_DATA[val_num][0], 220, graphBottom + 20 + textOffsetY);
 
             mainWindow.beginShape();
             for(int i = 0; i < graphData.valuesFilled; i++)
@@ -88,7 +96,7 @@ public class Graph {
                 }
                 else
                 {
-                    float max = mainWindow.height/graphData.COLUMN_DATA.length;
+                    float max = mainWindow.height/getGraphSectionsCount(graphData);
                     ypos = max - PApplet.map(graphData.COLUMN_DATA[val_num][i], graphData.MIN_VALUES[val_num], graphData.MAX_VALUES[val_num], 0, max);
                     ypos = ypos + graphBottom;
                 }
@@ -102,7 +110,20 @@ public class Graph {
             }
             mainWindow.endShape();
         }
+        }
 
+    }
+
+    protected int getGraphSectionsCount(GraphData graphData)
+    {
+        if(graphData.groups.length > 0)
+        {
+
+            return graphData.groups.length;
+        }
+
+
+        return graphData.COLUMN_DATA.length;
     }
 
     public void drawLineSeparator(float graphBottom)

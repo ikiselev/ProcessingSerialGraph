@@ -183,8 +183,24 @@ public class DataProcessor {
 
 
 
+        boolean needInitGroups = false;
+        if(graphData.groups == null)
+        {
+            needInitGroups = true;
+            graphData.groups = new int[this.graphData.COLUMN_NAMES.length][1];
+            System.out.println("Init single groups");
+        }
+        else
+        {
+            System.out.println("Using existed groups");
+        }
+
         for(int i=0; i < this.graphData.COLUMN_NAMES.length; i++)
         {
+            if(needInitGroups)
+            {
+                this.graphData.groups[i] = new int[]{i};
+            }
             int additionalDataIndex = this.graphData.COLUMN_NAMES[i].indexOf('{');
             if(additionalDataIndex != -1)
             {
@@ -219,6 +235,19 @@ public class DataProcessor {
 
         }
 
+        if(!needInitGroups)
+        {
+            for(int[] groupArray : graphData.groups)
+            {
+                for(int val_num : groupArray)
+                {
+                    if(val_num > graphData.COLUMN_NAMES.length - 1)
+                    {
+                        System.out.println("ERROR. Groups count mismatch. Check groups!");
+                    }
+                }
+            }
+        }
 
         //Making buffer
         this.graphData.COLUMN_DATA = new float[this.graphData.COLUMN_NAMES.length][graphData.showGraphTime];
