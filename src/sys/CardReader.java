@@ -12,7 +12,6 @@ public class CardReader extends MockReader
 
     String UNIQUE_DELIMITER = "\\$\\$";
     String END_DELIMITER = "\n";
-    String COLUMNS_HEADER = "Columns:";
 
 
     int SECTOR_SIZE = 512;
@@ -31,6 +30,7 @@ public class CardReader extends MockReader
     {
         super(parent, filename);
         int startBlock = Integer.parseInt(parent.appSettings.getProperty("CardReader.startBlock"));
+        boolean headerLine = true;
 
         try
         {
@@ -47,7 +47,17 @@ public class CardReader extends MockReader
                 diskAccess.seek(SECTOR_SIZE * startBlock);
                 diskAccess.readFully(content);
 
-                bufString += new String(content, 0, SECTOR_SIZE);
+                String contentString = new String(content, 0, SECTOR_SIZE);
+
+                int nullTerminator;
+                if((nullTerminator = contentString.indexOf("\0")) > 0)
+                {
+                    /**
+                     * Обрезаем нули
+                     */
+                    contentString = contentString.substring(0, nullTerminator);
+                }
+                bufString += contentString;
                 if(bufString.length() > MAX_LINE_LENGTH)
                 {
                     /**
@@ -63,14 +73,11 @@ public class CardReader extends MockReader
                     String message = messages[i];
 
 
-                    if(i == messages.length - 1 && !lastMessageInBufferIsFull)
+                    if(headerLine)
                     {
-                        /**
-                         * If last message is not fully in block
-                         */
-
-                        bufString = message;
-                        startBlock++;
+                        headerLine = false;
+                        fileContents += bufString;
+                        bufString = "";
                     }
                     else
                     {
@@ -85,6 +92,10 @@ public class CardReader extends MockReader
                             else
                             {
                                 uniqueNumber++;
+                                if(uniqueNumber > 255)
+                                {
+                                    uniqueNumber = 0;
+                                }
                                 if(uniqueNumber != Integer.parseInt(dataStruct[0]))
                                 {
                                     //TODO: Error!
@@ -99,10 +110,9 @@ public class CardReader extends MockReader
                             bufString = "";
                         }
                     }
-
-
-
                 }
+
+                startBlock++;
             }
 
 
@@ -111,8 +121,6 @@ public class CardReader extends MockReader
         {
             System.out.println("File read error: " + e.getMessage());
         }
-
-        fileContents = COLUMNS_HEADER + fileContents;
 
         try {
             serialEventMethod = parent.getClass().getMethod("fileEvent", new Class[] { String.class });
