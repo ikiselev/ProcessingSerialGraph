@@ -4,6 +4,8 @@ import Preprocessors.PreprocessorAbstract;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -271,7 +273,10 @@ public class DataProcessor {
         if(columnHeaderFilename != null)
         {
             System.out.println("Cleared serialData headers. Try to fill from header file");
-            serialData = "";
+
+            Hashtable<Integer, String> source = new Hashtable<Integer,String>();
+            HashMap<Integer, String>  map = new HashMap(source);
+
             try {
                 BufferedReader br = new BufferedReader(new FileReader(columnHeaderFilename));
 
@@ -283,22 +288,32 @@ public class DataProcessor {
                     Matcher m = r.matcher(line);
                     if (m.find( )) {
                         System.out.println("Found column headers value: " + m.group(1) + " as " + m.group(2) + ". Real header: " + m.group(4) );
-                        serialData += m.group(4) + ",";
+                        map.put(Integer.parseInt(m.group(2)), m.group(4));
                     }
 
                     line = br.readLine();
                 }
 
-                /**
-                 * Remove last comma
-                 */
-                serialData = serialData.substring(0, serialData.length() - 1);
+
 
                 br.close();
             } catch (IOException e)
             {
                 System.out.println("Parse columns from header file error: " + e.getMessage());
             }
+
+            String[] columnNumbers = serialData.split(",");
+            serialData = "";
+            for(String colNum : columnNumbers)
+            {
+                int num = Integer.parseInt(colNum);
+                serialData += map.get(num) + ",";
+            }
+
+            /**
+             * Remove last comma
+             */
+            serialData = serialData.substring(0, serialData.length() - 1);
         }
 
         //TODO: maybe make only one possible preprocessor available instead of list?
