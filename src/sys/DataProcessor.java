@@ -2,7 +2,10 @@ package sys;
 
 import Preprocessors.PreprocessorAbstract;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DataProcessor {
 
@@ -261,6 +264,42 @@ public class DataProcessor {
     public String[] getColumnNames(String serialData)
     {
         String[] result;
+
+        AppProperties appSettings = new AppProperties(this.getClass().getSimpleName());
+        String columnHeaderFilename = appSettings.getProperty("ColumnHeaders");
+
+        if(columnHeaderFilename != null)
+        {
+            System.out.println("Cleared serialData headers. Try to fill from header file");
+            serialData = "";
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(columnHeaderFilename));
+
+                String line = br.readLine();
+
+                while (line != null) {
+                    String pattern = "#define (.*) (\\d+)(.*?)//(.*)";
+                    Pattern r = Pattern.compile(pattern);
+                    Matcher m = r.matcher(line);
+                    if (m.find( )) {
+                        System.out.println("Found column headers value: " + m.group(1) + " as " + m.group(2) + ". Real header: " + m.group(4) );
+                        serialData += m.group(4) + ",";
+                    }
+
+                    line = br.readLine();
+                }
+
+                /**
+                 * Remove last comma
+                 */
+                serialData = serialData.substring(0, serialData.length() - 1);
+
+                br.close();
+            } catch (IOException e)
+            {
+                System.out.println("Parse columns from header file error: " + e.getMessage());
+            }
+        }
 
         //TODO: maybe make only one possible preprocessor available instead of list?
         if(!preprocessors.isEmpty()) //Supports only one preprocessor now..
